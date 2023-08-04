@@ -1,0 +1,63 @@
+---
+project_name: rss-feed-filterer
+
+env:
+  - CGO_ENABLED=0
+  - GO111MODULE=auto
+
+before:
+  hooks:
+    - go mod tidy
+    - go mod download
+
+builds:
+  - id: binary
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    binary: "{{ .ProjectName }}"
+    ldflags:
+      - -s -w -X github.com/{{ .Env.GITHUB_USERNAME }}/{{ .ProjectName }}/internal/version.gitVersion={{ .Version }}
+      - -s -w -X github.com/{{ .Env.GITHUB_USERNAME }}/{{ .ProjectName }}/internal/version.gitCommit={{ .ShortCommit }}
+      - -s -w -X github.com/{{ .Env.GITHUB_USERNAME }}/{{ .ProjectName }}/internal/version.buildDate={{ .CommitDate }}
+    main: ./main.go
+
+archives:
+  - files:
+      - README.md
+      - LICENSE
+    name_template: >-
+      {{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}
+
+release:
+  github:
+    owner: "{{ .Env.GITHUB_USERNAME }}"
+    name: "{{ .ProjectName }}"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^ci:'
+      - '^build:'
+      - '^style:'
+      - 'README'
+      - '^Merge branch'
+      - '^Merge pull request'
+
+brews:
+  - name: "{{ .ProjectName }}"
+    tap:
+      owner: "{{ .Env.GITHUB_USERNAME }}"
+      name: homebrew-tap
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
+    folder: Formula
+    goarm: 6
+    homepage: https://github.com/{{ .Env.GITHUB_USERNAME }}/{{ .ProjectName }}
+    license: apache-2.0
+    description: "{{ .ProjectName }}" is a tool written with Golang that helps you take the various discovery/management related actions on your target AWS S3 bucket.
