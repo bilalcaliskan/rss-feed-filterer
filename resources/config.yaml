@@ -1,0 +1,8 @@
+repositories:
+  - name: Repository 1
+    description: Description 1
+    rssURL: "https://github.com/owner/repository1/releases.atom"
+    checkIntervalMinutes: 10
+  - name: Repository 2
+    rssURL: "https://github.com/owner/repository2/releases.atom"
+    checkIntervalMinutes: 5
