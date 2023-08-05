@@ -1,1 +1,1 @@
-# rss-feed-filterer
+# RSS Feed Filterer for Github Releases
