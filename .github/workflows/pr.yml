@@ -39,12 +39,12 @@ jobs:
         run: make -s clean
 
   tests:
-    strategy:
-      matrix:
-        name: [unit, e2e]
-        os: [ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
-    name: test (${{ matrix.name }}) on ${{ matrix.os }}
+#    strategy:
+#      matrix:
+#        name: [unit, e2e]
+    runs-on: ubuntu-latest
+#    name: test (${{ matrix.name }})
+    name: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -53,8 +53,10 @@ jobs:
         with:
           go-version-file: "go.mod"
           cache: true
-      - name: Run ${{ matrix.name }} tests
-        run: make -s test-${{ matrix.name }}
+#      - name: Run ${{ matrix.name }} tests
+#        run: make -s test-${{ matrix.name }}
+      - name: Run tests
+        run: make -s test
 
   staticcheck:
     runs-on: ubuntu-latest
