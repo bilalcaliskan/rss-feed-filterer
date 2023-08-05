@@ -1,0 +1,6 @@
+FROM gcr.io/distroless/static:nonroot-amd64
+
+ADD rss-feed-filterer /usr/local/bin/rss-feed-filterer
+
+USER nonroot
+ENTRYPOINT ["rss-feed-filterer"]
