@@ -1,8 +1,15 @@
+storage:
+  type: s3
+  provider: aws
+  accessKey: asdfasdfasdf
+  secretKey: asdlfkjasdlkasdf
+  region: alskdfjlaskdfj
+  bucketName: aslkdfjalsdkfjasdf
 repositories:
-  - name: Repository 1
-    description: Description 1
-    rssURL: "https://github.com/owner/repository1/releases.atom"
-    checkIntervalMinutes: 10
-  - name: Repository 2
-    rssURL: "https://github.com/owner/repository2/releases.atom"
-    checkIntervalMinutes: 5
+  - name: oreilly-trial
+    description: sample description
+    rssURL: "https://github.com/bilalcaliskan/oreilly-trial/releases.atom"
+    checkIntervalMinutes: 1
+  - name: s3-manager
+    rssURL: "https://github.com/bilalcaliskan/s3-manager/releases.atom"
+    checkIntervalMinutes: 1

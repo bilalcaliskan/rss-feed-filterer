@@ -1,35 +1,49 @@
 package feed
 
 import (
-	"github.com/bilalcaliskan/rss-feed-filterer/internal/config"
-	"github.com/mmcdole/gofeed"
-	"log"
+	"context"
 	"time"
+
+	"github.com/bilalcaliskan/rss-feed-filterer/internal/config"
+	"github.com/bilalcaliskan/rss-feed-filterer/internal/logging"
+	"github.com/mmcdole/gofeed"
+	"github.com/rs/zerolog"
 )
+
+func init() {
+	logger = logging.GetLogger()
+}
 
 const maxRetries = 3
 
-// create a channel to act as a semaphore
-var sem = make(chan struct{}, 5) // allow up to 5 concurrent access
+var logger zerolog.Logger
 
-func CheckGithubReleases(repo config.Repository, interval time.Duration) {
-	sem <- struct{}{}        // acquire the semaphore
-	defer func() { <-sem }() // release the semaphore when done
-
-	fp := gofeed.NewParser()
+func CheckGithubReleases(ctx context.Context, sem chan struct{}, repo config.Repository, interval time.Duration) {
+	parser := gofeed.NewParser()
 
 	checkFeed := func() {
+		defer func() {
+			<-sem
+		}() // release the semaphore when done
+
 		for retries := 0; retries < maxRetries; retries++ {
-			feed, err := fp.ParseURL(repo.RSSURL)
+			logger.Info().Str("name", repo.Name).Msg("trying to fetch the feed")
+
+			//feed, err := fp.ParseURL(repo.RSSURL)
+			_, err := parser.ParseURL(repo.RSSURL)
 			if err != nil {
-				log.Printf("Error fetching feed: %v, retrying...", err)
-				time.Sleep(time.Second * time.Duration(2<<retries))
+				logger.Warn().
+					Str("error", err.Error()).
+					Str("url", repo.RSSURL).
+					Msg("an error occurred while fetching feed, retrying...")
+				time.Sleep(time.Second * 5)
 				continue
 			}
 
-			for _, item := range feed.Items {
-				log.Printf("Title: %v\nLink: %v\nPublished: %v\n", item.Title, item.Link, item.Published)
-			}
+			//for _, item := range feed.Items {
+			//	logger.Info().Str("name", repo.Name).Msg(item.Title)
+			//}
+			logger.Info().Str("name", repo.Name).Msg("fetched releases")
 
 			break
 		}
@@ -41,7 +55,12 @@ func CheckGithubReleases(repo config.Repository, interval time.Duration) {
 	ticker := time.NewTicker(interval)
 	defer ticker.Stop()
 
-	for range ticker.C {
-		checkFeed()
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+			checkFeed()
+		}
 	}
 }
