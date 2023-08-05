@@ -105,12 +105,9 @@ jobs:
 #        env:
 #          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  builds:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
-    name: build (${{ matrix.os }})
+  build:
+    runs-on: ubuntu-latest
+    name: build
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -119,7 +116,7 @@ jobs:
         with:
           go-version-file: "go.mod"
           cache: true
-      - name: Build on (${{ matrix.os }})
+      - name: Build
         run: make -s build
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
