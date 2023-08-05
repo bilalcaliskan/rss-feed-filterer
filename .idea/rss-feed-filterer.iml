@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="WEB_MODULE" version="4">
-  <component name="Go" enabled="true" />
+  <component name="Go" enabled="true">
+    <buildTags>
+      <option name="customFlags">
+        <array>
+          <option value="unit" />
+          <option value="e2e" />
+          <option value="integration" />
+        </array>
+      </option>
+    </buildTags>
+  </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="73278298-78ac-4dab-a207-a1f633ed52c4" />
   </component>
 </module>
