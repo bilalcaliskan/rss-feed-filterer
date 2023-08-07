@@ -21,10 +21,11 @@ func Filter(ctx context.Context) error {
 	logger := logging.GetLogger()
 
 	logger.Info().
-		Str("accessKey", cfg.AccessKey).
-		Str("secretKey", cfg.SecretKey).
-		Str("region", cfg.Region).
-		Str("bucketName", cfg.BucketName).
+		Any("notification.slack", cfg.Notification.Slack).
+		Msg("")
+
+	logger.Info().
+		Any("storage.s3", cfg.Storage.S3).
 		Msg("")
 
 	for _, repo := range cfg.Repositories {

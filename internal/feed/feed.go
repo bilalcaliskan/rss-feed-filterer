@@ -17,7 +17,10 @@ func init() {
 	logger = logging.GetLogger()
 }
 
-const maxRetries = 3
+const (
+	maxRetries         = 3
+	defaultSemverRegex = "((?:v)?\\d+\\.\\d+\\.\\d+)$"
+)
 
 var logger zerolog.Logger
 
@@ -51,11 +54,19 @@ func CheckGithubReleases(ctx context.Context, sem chan struct{}, repo config.Rep
 				continue
 			}
 
+			logger.Info().
+				Str("name", repo.Name).
+				Int("count", len(feed.Items)).
+				Msg("fetched releases")
+
 			for _, item := range feed.Items {
-				pattern := regexp.MustCompile(`((?:v)?\d+\.\d+\.\d+)$`)
+				pattern := regexp.MustCompile(defaultSemverRegex)
 				matches := pattern.FindStringSubmatch(item.Link)
 				if len(matches) > 0 {
-					logger.Info().Str("version", matches[0]).Msg("fetched version")
+					logger.Info().
+						Str("name", repo.Name).
+						Str("version", matches[0]).
+						Msg("fetched version")
 				}
 			}
 

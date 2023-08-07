@@ -7,11 +7,31 @@ import (
 type Config struct {
 	Repositories []Repository `yaml:"repositories"`
 	Storage      `yaml:"storage"`
+	Notification `yaml:"notification"`
+}
+
+type Repository struct {
+	Name                 string `yaml:"name"`
+	Description          string `yaml:"description"`
+	RSSURL               string `yaml:"rssURL"`
+	CheckIntervalMinutes int    `yaml:"checkIntervalMinutes"`
+}
+
+type Notification struct {
+	Slack `yaml:"slack"`
+}
+
+type Slack struct {
+	Enabled    bool   `yaml:"enabled"`
+	WebhookUrl string `yaml:"webhookUrl"`
 }
 
 type Storage struct {
-	Type       string `yaml:"type,omitempty"`
-	Provider   string `yaml:"provider,omitempty"`
+	S3 `yaml:"s3"`
+}
+
+type S3 struct {
+	Provider   string `yaml:"provider"`
 	AccessKey  string `yaml:"accessKey"`
 	SecretKey  string `yaml:"secretKey"`
 	Region     string `yaml:"region"`
@@ -39,11 +59,4 @@ func (s *Storage) SetAccessCredentialsFromEnv() error {
 	}
 
 	return nil
-}
-
-type Repository struct {
-	Name                 string `yaml:"name"`
-	Description          string `yaml:"description,omitempty"`
-	RSSURL               string `yaml:"rssURL"`
-	CheckIntervalMinutes int    `yaml:"checkIntervalMinutes"`
 }
