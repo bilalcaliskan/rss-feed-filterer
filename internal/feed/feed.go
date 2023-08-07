@@ -2,6 +2,9 @@ package feed
 
 import (
 	"context"
+	"fmt"
+	"os"
+	"regexp"
 	"time"
 
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/config"
@@ -29,8 +32,16 @@ func CheckGithubReleases(ctx context.Context, sem chan struct{}, repo config.Rep
 		for retries := 0; retries < maxRetries; retries++ {
 			logger.Info().Str("name", repo.Name).Msg("trying to fetch the feed")
 
-			//feed, err := fp.ParseURL(repo.RSSURL)
-			_, err := parser.ParseURL(repo.RSSURL)
+			filepath := "testdata/releases.atom"
+			file, err := os.Open(filepath)
+			if err != nil {
+				fmt.Printf("Error opening file: %v\n", err)
+				return
+			}
+
+			file.Close()
+
+			feed, err := parser.ParseURL(repo.RSSURL)
 			if err != nil {
 				logger.Warn().
 					Str("error", err.Error()).
@@ -40,10 +51,13 @@ func CheckGithubReleases(ctx context.Context, sem chan struct{}, repo config.Rep
 				continue
 			}
 
-			//for _, item := range feed.Items {
-			//	logger.Info().Str("name", repo.Name).Msg(item.Title)
-			//}
-			logger.Info().Str("name", repo.Name).Msg("fetched releases")
+			for _, item := range feed.Items {
+				pattern := regexp.MustCompile(`((?:v)?\d+\.\d+\.\d+)$`)
+				matches := pattern.FindStringSubmatch(item.Link)
+				if len(matches) > 0 {
+					logger.Info().Str("version", matches[0]).Msg("fetched version")
+				}
+			}
 
 			break
 		}
