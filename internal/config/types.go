@@ -8,13 +8,15 @@ type Config struct {
 	Repositories []Repository `yaml:"repositories"`
 	Storage      `yaml:"storage"`
 	Notification `yaml:"notification"`
+	Type         string `yaml:"type"`
 }
 
 type Repository struct {
 	Name                 string `yaml:"name"`
 	Description          string `yaml:"description"`
-	RSSURL               string `yaml:"rssURL"`
+	Url                  string `yaml:"url"`
 	CheckIntervalMinutes int    `yaml:"checkIntervalMinutes"`
+	//FeedType             string `yaml:"feedType"`
 }
 
 type Notification struct {
@@ -40,7 +42,7 @@ type S3 struct {
 
 func (s *Storage) SetAccessCredentialsFromEnv() error {
 	viper.AutomaticEnv()
-	viper.SetEnvPrefix("aws")
+	viper.SetEnvPrefix("aws_global")
 	if err := viper.BindEnv("access_key", "secret_key", "bucket_name", "region"); err != nil {
 		return err
 	}

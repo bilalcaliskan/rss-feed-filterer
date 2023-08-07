@@ -2,11 +2,12 @@ package filterer
 
 import (
 	"context"
-	"time"
+	"fmt"
 
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/config"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/feed"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/logging"
+	"github.com/bilalcaliskan/rss-feed-filterer/internal/storage/aws"
 )
 
 // create a channel to act as a semaphore
@@ -18,20 +19,22 @@ func Filter(ctx context.Context) error {
 		return err
 	}
 
-	logger := logging.GetLogger()
+	client, err := aws.CreateClient(cfg.AccessKey, cfg.SecretKey, cfg.Region)
+	if err != nil {
+		return err
+	}
 
-	logger.Info().
-		Any("notification.slack", cfg.Notification.Slack).
-		Msg("")
-
-	logger.Info().
-		Any("storage.s3", cfg.Storage.S3).
-		Msg("")
+	if !aws.IsBucketExists(client, cfg.BucketName) {
+		return fmt.Errorf("bucket %s not found", cfg.BucketName)
+	}
 
 	for _, repo := range cfg.Repositories {
 		go func(repo config.Repository) {
-			sem <- struct{}{}                                                                              // acquire the semaphore
-			feed.CheckGithubReleases(ctx, sem, repo, time.Duration(repo.CheckIntervalMinutes)*time.Minute) // Start the goroutine to check GitHub releases
+			checker := feed.NewReleaseChecker(client, repo, cfg.BucketName, logging.GetLogger())
+
+			// acquire the semaphore
+			sem <- struct{}{}
+			checker.CheckGithubReleases(ctx, sem)
 		}(repo)
 	}
 
