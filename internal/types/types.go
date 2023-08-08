@@ -3,9 +3,9 @@ package types
 import "time"
 
 type Release struct {
-	Name        string     `json:"name"`
+	ProjectName string     `json:"projectName"`
+	Version     string     `json:"version"`
 	PublishedAt *time.Time `json:"publishedAt"`
 	UpdatedAt   *time.Time `json:"updatedAt"`
 	Url         string     `json:"url"`
-	IsNotified  bool       `json:"isNotified"`
 }

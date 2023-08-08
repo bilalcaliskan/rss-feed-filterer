@@ -70,7 +70,7 @@ func IsObjectExists(client S3ClientAPI, bucketName, key string) bool {
 			// The object does not exist
 			return false
 		}
-		log.Printf("failed to check for object existence, %v", err)
+
 		return false
 	}
 
@@ -85,9 +85,9 @@ func IsBucketExists(client S3ClientAPI, bucketName string) bool {
 	if err != nil {
 		var awsErr *types.NoSuchBucket
 		if ok := errors.As(err, &awsErr); ok {
-			// The bucket does not exist
 			return false
 		}
+
 		// Some other error occurred (e.g., Forbidden)
 		return false
 	}

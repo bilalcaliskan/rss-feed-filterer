@@ -10,10 +10,14 @@ storage:
     region: us-east-1
     bucketName: asdfasdfadsf
 repositories:
-#  - name: consul
-#    description: sample description
-#    url: "https://github.com/hashicorp/consul"
-#    checkIntervalMinutes: 30
+  - name: consul
+    description: sample description
+    url: "https://github.com/hashicorp/consul"
+    checkIntervalMinutes: 30
+  - name: terraform
+    description: sample description
+    url: "https://github.com/hashicorp/terraform"
+    checkIntervalMinutes: 30
   - name: s3-manager
     url: "https://github.com/bilalcaliskan/s3-manager"
     checkIntervalMinutes: 30
