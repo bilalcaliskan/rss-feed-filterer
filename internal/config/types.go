@@ -42,7 +42,7 @@ type S3 struct {
 
 func (s *Storage) SetAccessCredentialsFromEnv() error {
 	viper.AutomaticEnv()
-	viper.SetEnvPrefix("aws_global")
+	viper.SetEnvPrefix("aws")
 	if err := viper.BindEnv("access_key", "secret_key", "bucket_name", "region"); err != nil {
 		return err
 	}

@@ -1,12 +1,12 @@
 package slack
 
 import (
-	"bytes"
-	"encoding/json"
-	"net/http"
+	"fmt"
+	"github.com/bilalcaliskan/rss-feed-filterer/internal/config"
+	api "github.com/slack-go/slack"
 )
 
-type SlackMessage struct {
+type Message struct {
 	Attachments []Attachment `json:"attachments"`
 }
 
@@ -21,17 +21,13 @@ type Attachment struct {
 	ThumbURL   string `json:"thumb_url"`
 }
 
-func SendSlackNotification(webhookURL string, msg SlackMessage) error {
-	data, err := json.Marshal(msg)
-	if err != nil {
-		return err
+func SendNotification(projectName, version, url string) error {
+	msg := api.WebhookMessage{
+		Attachments: []api.Attachment{},
+		Username:    "GoReleaser",
+		IconURL:     "https://github.com/goreleaser/goreleaser/raw/939f2b002b29d2c8df6efd2d1f1d0b85c4ac5ee0/www/docs/static/logo.png",
+		Text:        fmt.Sprintf("%s %s is out! Check it out at %s", projectName, version, url),
 	}
 
-	resp, err := http.Post(webhookURL, "application/json", bytes.NewReader(data))
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	return nil
+	return api.PostWebhook(config.GetConfig().Notification.WebhookUrl, &msg)
 }

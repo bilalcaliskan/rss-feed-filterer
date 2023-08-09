@@ -14,10 +14,11 @@ import (
 var sem = make(chan struct{}, 5) // allow up to 5 concurrent access
 
 func Filter(ctx context.Context) error {
-	cfg, err := config.ReadConfig()
-	if err != nil {
-		return err
-	}
+	//cfg, err := config.ReadConfig()
+	//if err != nil {
+	//	return err
+	//}
+	cfg := config.GetConfig()
 
 	client, err := aws.CreateClient(cfg.AccessKey, cfg.SecretKey, cfg.Region)
 	if err != nil {

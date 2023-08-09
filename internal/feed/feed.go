@@ -3,7 +3,9 @@ package feed
 import (
 	"context"
 	"fmt"
+	"github.com/bilalcaliskan/rss-feed-filterer/internal/notification/slack"
 	"net/url"
+	"os"
 	"regexp"
 	"strings"
 	"time"
@@ -19,7 +21,7 @@ import (
 const (
 	maxRetries         = 3
 	defaultSemverRegex = `/(v?\d+\.\d+\.\d+)$`
-	releaseFileKey     = "%s_releases.json"
+	releaseFileKey     = "releases.json"
 )
 
 type ReleaseChecker struct {
@@ -73,31 +75,31 @@ func (r *ReleaseChecker) checkFeed(sem chan struct{}, projectName string, repo c
 	for retries := 0; retries < maxRetries; retries++ {
 		r.logger.Info().Str("projectName", projectName).Msg("trying to fetch the feed")
 
-		//file, err := os.Open("testdata/releases.atom")
-		//if err != nil {
-		//	r.logger.Warn().Str("error", err.Error()).Msg("Error opening file")
-		//	continue
-		//}
-		//
-		//feed, err := r.parser.Parse(file)
-		//if err != nil {
-		//	r.logger.Warn().
-		//		Str("error", err.Error()).
-		//		Msg("an error occurred while parsing feed, retrying...")
-		//	continue
-		//}
-		//
-		//_ = file.Close()
+		file, err := os.Open("testdata/releases.atom")
+		if err != nil {
+			r.logger.Warn().Str("error", err.Error()).Msg("Error opening file")
+			continue
+		}
 
-		feed, err := r.parser.ParseURL(fmt.Sprintf("%s/releases.atom", repo.Url))
+		feed, err := r.parser.Parse(file)
 		if err != nil {
 			r.logger.Warn().
 				Str("error", err.Error()).
-				Str("url", repo.Url).
-				Msg("an error occurred while fetching feed, retrying...")
-			time.Sleep(time.Second * 5)
+				Msg("an error occurred while parsing feed, retrying...")
 			continue
 		}
+
+		_ = file.Close()
+
+		//feed, err := r.parser.ParseURL(fmt.Sprintf("%s/releases.atom", repo.Url))
+		//if err != nil {
+		//	r.logger.Warn().
+		//		Str("error", err.Error()).
+		//		Str("url", repo.Url).
+		//		Msg("an error occurred while fetching feed, retrying...")
+		//	time.Sleep(time.Second * 5)
+		//	continue
+		//}
 
 		r.logger.Info().
 			Str("name", repo.Name).
@@ -106,59 +108,54 @@ func (r *ReleaseChecker) checkFeed(sem chan struct{}, projectName string, repo c
 
 		fetchedReleases := r.getReleasesFromFeed(projectName, feed.Items)
 
-		var diff []types.Release
-		if aws.IsObjectExists(r.client, r.bucketName, fmt.Sprintf(releaseFileKey, projectName)) {
-			previousReleases, err := aws.GetReleases(r.client, r.bucketName, fmt.Sprintf(releaseFileKey, projectName))
+		var allReleases []types.Release
+		if aws.IsObjectExists(r.client, r.bucketName, fmt.Sprintf("%s/%s", projectName, releaseFileKey)) {
+			previousReleases, err := aws.GetReleases(r.client, r.bucketName, fmt.Sprintf("%s/%s", projectName, releaseFileKey))
 			if err != nil {
 				r.logger.Warn().Msg("an error occured while getting releases from bucket")
 				continue
 			}
 
-			diff = r.getDiff(fetchedReleases, previousReleases)
+			diff := r.getDiff(fetchedReleases, previousReleases)
 			if len(diff) == 0 {
 				r.logger.Info().Msg("no new releases found, nothing to do")
 				return
 			}
 
-			diff = append(diff, previousReleases...)
+			r.logger.Info().Int("count", len(diff)).Msg("successfully fetched diffs")
+			r.sendNotification(diff)
+
+			allReleases = append(diff, previousReleases...)
 		} else {
 			r.logger.Info().Msg("releases does not exists on bucket, adding from scratch")
-			diff = fetchedReleases
+			allReleases = fetchedReleases
 		}
 
-		//r.logger.Info().Msg("final releases")
-		//fmt.Println(diff)
-
 		r.logger.Info().Msg("putting diffs into bucket")
-		if err := aws.PutReleases(r.client, r.bucketName, fmt.Sprintf(releaseFileKey, projectName), diff); err != nil {
+		if err := aws.PutReleases(r.client, r.bucketName, fmt.Sprintf("%s/%s", projectName, releaseFileKey), allReleases); err != nil {
 			r.logger.Warn().Msg("an error occured while putting releases into bucket")
 			continue
 		}
 
-		r.logger.Info().Msg("successfully put diffs into bucket")
+		r.logger.Info().Int("count", len(allReleases)).Msg("successfully put all releases into bucket")
 
-		//for _, v := range diff {
-		//	message := slack.SlackMessage{
-		//		Attachments: []slack.Attachment{
-		//			{
-		//				Fallback:   "New GitHub release for hashicorp/terraform",
-		//				Color:      "#36a64f",
-		//				Pretext:    "New GitHub Release Notification",
-		//				AuthorName: "GitHub",
-		//				AuthorLink: "https://github.com/",
-		//				Title:      "New release for hashicorp/terraform",
-		//				Text:       "Version v1.0.1 of hashicorp/terraform has been released.",
-		//				ThumbURL:   "https://path.to/your/icon.png", // Link to your icon/thumbnail image
-		//			},
-		//		},
-		//	}
-		//
-		//	if err := slack.SendSlackNotification("WEBHOOK_URL", message); err != nil {
-		//		panic(err)
-		//	}
-		//}
+		// TODO: check if notifications enabled
+		// TODO: ensure project name does not end with /
+
+		//r.sendNotification(diff)
 
 		break
+	}
+}
+
+func (r *ReleaseChecker) sendNotification(releases []types.Release) {
+	for _, v := range releases {
+		if err := slack.SendNotification(v.ProjectName, v.Version, v.Url); err != nil {
+			r.logger.Warn().Err(err).Msg("an error occurred while sending notification, skipping")
+			continue
+		}
+
+		r.logger.Info().Msg("successfully sent notification")
 	}
 }
 
@@ -181,13 +178,13 @@ func (r *ReleaseChecker) getReleasesFromFeed(projectName string, items []*gofeed
 	return releases
 }
 
-func (r *ReleaseChecker) getDiff(fetchedReleases []types.Release, previousReleases []types.Release) (diff []types.Release) {
-	//fmt.Println("fetchedReleases")
-	//fmt.Println(fetchedReleases)
-	//
-	//fmt.Println("previousReleases")
-	//fmt.Println(previousReleases)
+//func printReleases(releases []types.Release) {
+//	for _, v := range releases {
+//		fmt.Printf("%s %s\n", v.ProjectName, v.Version)
+//	}
+//}
 
+func (r *ReleaseChecker) getDiff(fetchedReleases []types.Release, previousReleases []types.Release) (diff []types.Release) {
 	for _, item := range fetchedReleases {
 		if !r.contains(previousReleases, item) {
 			diff = append(diff, item)
