@@ -3,12 +3,14 @@ package feed
 import (
 	"context"
 	"fmt"
-	"github.com/bilalcaliskan/rss-feed-filterer/internal/notification/slack"
 	"net/url"
 	"os"
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce"
+	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce/slack"
 
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/config"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/storage/aws"
@@ -25,25 +27,27 @@ const (
 )
 
 type ReleaseChecker struct {
-	client     aws.S3ClientAPI
+	aws.S3ClientAPI
 	bucketName string
-	parser     *gofeed.Parser
-	logger     zerolog.Logger
-	repo       config.Repository
+	*gofeed.Parser
+	logger zerolog.Logger
+	config.Repository
+	announce.Announcer
 }
 
-func NewReleaseChecker(client aws.S3ClientAPI, repo config.Repository, bucketName string, logger zerolog.Logger) *ReleaseChecker {
+func NewReleaseChecker(client aws.S3ClientAPI, repo config.Repository, bucketName string, logger zerolog.Logger, announcer announce.Announcer) *ReleaseChecker {
 	return &ReleaseChecker{
-		client:     client,
-		bucketName: bucketName,
-		parser:     gofeed.NewParser(),
-		logger:     logger,
-		repo:       repo,
+		S3ClientAPI: client,
+		bucketName:  bucketName,
+		Parser:      gofeed.NewParser(),
+		logger:      logger,
+		Repository:  repo,
+		Announcer:   announcer,
 	}
 }
 
 func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, sem chan struct{}) {
-	projectName, err := r.extractProjectName(r.repo.Url)
+	projectName, err := r.extractProjectName(r.Url)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("Failed to extract project name")
 		return
@@ -51,18 +55,18 @@ func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, sem chan struc
 
 	r.logger = r.logger.With().Str("projectName", projectName).Logger()
 
-	ticker := time.NewTicker(time.Duration(r.repo.CheckIntervalMinutes) * time.Minute)
+	ticker := time.NewTicker(time.Duration(r.CheckIntervalMinutes) * time.Minute)
 	defer ticker.Stop()
 
 	// Run immediately since ticker does not run on first hit
-	r.checkFeed(sem, projectName, r.repo)
+	r.checkFeed(sem, projectName, r.Repository)
 
 	for {
 		select {
 		case <-ctx.Done():
 			return
 		case <-ticker.C:
-			r.checkFeed(sem, projectName, r.repo)
+			r.checkFeed(sem, projectName, r.Repository)
 		}
 	}
 }
@@ -81,7 +85,7 @@ func (r *ReleaseChecker) checkFeed(sem chan struct{}, projectName string, repo c
 			continue
 		}
 
-		feed, err := r.parser.Parse(file)
+		feed, err := r.Parse(file)
 		if err != nil {
 			r.logger.Warn().
 				Str("error", err.Error()).
@@ -109,8 +113,8 @@ func (r *ReleaseChecker) checkFeed(sem chan struct{}, projectName string, repo c
 		fetchedReleases := r.getReleasesFromFeed(projectName, feed.Items)
 
 		var allReleases []types.Release
-		if aws.IsObjectExists(r.client, r.bucketName, fmt.Sprintf("%s/%s", projectName, releaseFileKey)) {
-			previousReleases, err := aws.GetReleases(r.client, r.bucketName, fmt.Sprintf("%s/%s", projectName, releaseFileKey))
+		if aws.IsObjectExists(r.S3ClientAPI, r.bucketName, fmt.Sprintf("%s/%s", projectName, releaseFileKey)) {
+			previousReleases, err := aws.GetReleases(r.S3ClientAPI, r.bucketName, fmt.Sprintf("%s/%s", projectName, releaseFileKey))
 			if err != nil {
 				r.logger.Warn().Msg("an error occured while getting releases from bucket")
 				continue
@@ -132,7 +136,7 @@ func (r *ReleaseChecker) checkFeed(sem chan struct{}, projectName string, repo c
 		}
 
 		r.logger.Info().Msg("putting diffs into bucket")
-		if err := aws.PutReleases(r.client, r.bucketName, fmt.Sprintf("%s/%s", projectName, releaseFileKey), allReleases); err != nil {
+		if err := aws.PutReleases(r.S3ClientAPI, r.bucketName, fmt.Sprintf("%s/%s", projectName, releaseFileKey), allReleases); err != nil {
 			r.logger.Warn().Msg("an error occured while putting releases into bucket")
 			continue
 		}
@@ -149,13 +153,23 @@ func (r *ReleaseChecker) checkFeed(sem chan struct{}, projectName string, repo c
 }
 
 func (r *ReleaseChecker) sendNotification(releases []types.Release) {
+	if !r.Announcer.IsEnabled() {
+		return
+	}
+
 	for _, v := range releases {
-		if err := slack.SendNotification(v.ProjectName, v.Version, v.Url); err != nil {
-			r.logger.Warn().Err(err).Msg("an error occurred while sending notification, skipping")
+		if err := r.Announcer.Notify(slack.SlackPayload{
+			ProjectName: v.ProjectName,
+			Version:     v.Version,
+			URL:         v.Url,
+			IconUrl:     "https://github.com/goreleaser/goreleaser/raw/939f2b002b29d2c8df6efd2d1f1d0b85c4ac5ee0/www/docs/static/logo.png",
+			Username:    "GoReleaser",
+		}); err != nil {
+			r.logger.Warn().Err(err).Msg("an error occurred while sending announce, skipping")
 			continue
 		}
 
-		r.logger.Info().Msg("successfully sent notification")
+		r.logger.Info().Msg("successfully sent announce")
 	}
 }
 

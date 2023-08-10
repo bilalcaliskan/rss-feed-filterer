@@ -7,7 +7,7 @@ import (
 type Config struct {
 	Repositories []Repository `yaml:"repositories"`
 	Storage      `yaml:"storage"`
-	Notification `yaml:"notification"`
+	Announcer    `yaml:"announcer"`
 	Type         string `yaml:"type"`
 }
 
@@ -19,7 +19,7 @@ type Repository struct {
 	//FeedType             string `yaml:"feedType"`
 }
 
-type Notification struct {
+type Announcer struct {
 	Slack `yaml:"slack"`
 }
 

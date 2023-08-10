@@ -1,4 +1,4 @@
-notification:
+announcer:
   slack:
     enabled: true
     webhookUrl: asdfasdfasdf
