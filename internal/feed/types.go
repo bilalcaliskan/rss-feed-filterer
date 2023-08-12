@@ -72,7 +72,11 @@ func (r *ReleaseChecker) fetchFeed(projectName string) (*gofeed.Feed, error) {
 		return nil, err
 	}
 
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			panic(err)
+		}
+	}()
 
 	feed, err := r.Parse(file)
 	if err != nil {
