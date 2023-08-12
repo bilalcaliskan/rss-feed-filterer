@@ -21,114 +21,114 @@
     </author>
     <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/in/15368?s=60&amp;v=4"/>
   </entry>
-  <entry>
-    <id>tag:github.com,2008:Repository/621493965/v2.1.0</id>
-    <updated>2023-07-18T00:46:55+03:00</updated>
-    <link rel="alternate" type="text/html" href="https://github.com/hashicorp/consul/releases/tag/v2.1.0"/>
-    <title>v2.1.0</title>
-    <content type="html">&lt;h2&gt;Changelog&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/a90b4eb74a7ce31a2fba70036e37e424f0cf7726/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/a90b4eb74a7ce31a2fba70036e37e424f0cf7726&quot;&gt;&lt;tt&gt;a90b4eb&lt;/tt&gt;&lt;/a&gt; build(deps): bump github.com/aws/aws-sdk-go from 1.44.298 to 1.44.300&lt;/li&gt;
-&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/99c3c5969198f11c1f1b5a501cad348957be42e9/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/99c3c5969198f11c1f1b5a501cad348957be42e9&quot;&gt;&lt;tt&gt;99c3c59&lt;/tt&gt;&lt;/a&gt; fix: fix code smell&lt;/li&gt;
-&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/1983da3d3cf20e00caa4ba69f4df945e0b59fd57/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/1983da3d3cf20e00caa4ba69f4df945e0b59fd57&quot;&gt;&lt;tt&gt;1983da3&lt;/tt&gt;&lt;/a&gt; refactoring: continue&lt;/li&gt;
-&lt;/ul&gt;</content>
-    <author>
-      <name>github-actions[bot]</name>
-    </author>
-    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/in/15368?s=60&amp;v=4"/>
-  </entry>
-  <entry>
-    <id>tag:github.com,2008:Repository/621493965/v2.0.0</id>
-    <updated>2023-07-16T18:46:45+03:00</updated>
-    <link rel="alternate" type="text/html" href="https://github.com/hashicorp/consul/releases/tag/v2.0.0"/>
-    <title>v2.0.0</title>
-    <content type="html">&lt;h2&gt;Changelog&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/8c4b71773b19d4a447245c1fd0b70779d53315dd/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/8c4b71773b19d4a447245c1fd0b70779d53315dd&quot;&gt;&lt;tt&gt;8c4b717&lt;/tt&gt;&lt;/a&gt; chore: remove TODOS.md file&lt;/li&gt;
-&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/64209c9f270aeaac7c2e07b49a19fcae346d4916/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/64209c9f270aeaac7c2e07b49a19fcae346d4916&quot;&gt;&lt;tt&gt;64209c9&lt;/tt&gt;&lt;/a&gt; fix: fix clean module&lt;/li&gt;
-&lt;/ul&gt;</content>
-    <author>
-      <name>github-actions[bot]</name>
-    </author>
-    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/in/15368?s=60&amp;v=4"/>
-  </entry>
-  <entry>
-    <id>tag:github.com,2008:Repository/621493965/v1.0.19</id>
-    <updated>2023-07-16T15:55:36+03:00</updated>
-    <link rel="alternate" type="text/html" href="https://github.com/hashicorp/consul/releases/tag/v1.0.19"/>
-    <title>v1.0.19</title>
-    <content type="html">&lt;h2&gt;Changelog&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/1772afda61c24125a2a29810502a96f27fd29ef0/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/1772afda61c24125a2a29810502a96f27fd29ef0&quot;&gt;&lt;tt&gt;1772afd&lt;/tt&gt;&lt;/a&gt; refactor: reduce duplicated code lines on both source files and test files&lt;/li&gt;
-&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/ad123369a6a289f260a380de3c66a506855892e0/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/ad123369a6a289f260a380de3c66a506855892e0&quot;&gt;&lt;tt&gt;ad12336&lt;/tt&gt;&lt;/a&gt; refactor: refactor test files of cmd packages&lt;/li&gt;
-&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/7115c20e8f9d5f06bdaf06ec5a5ebff577bebea1/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/7115c20e8f9d5f06bdaf06ec5a5ebff577bebea1&quot;&gt;&lt;tt&gt;7115c20&lt;/tt&gt;&lt;/a&gt; refactor: use MockClient from internal/aws package on cmds&lt;/li&gt;
-&lt;/ul&gt;</content>
-    <author>
-      <name>github-actions[bot]</name>
-    </author>
-    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/in/15368?s=60&amp;v=4"/>
-  </entry>
-  <entry>
-    <id>tag:github.com,2008:Repository/621493965/v1.0.18</id>
-    <updated>2023-07-13T00:31:14+03:00</updated>
-    <link rel="alternate" type="text/html" href="https://github.com/hashicorp/consul/releases/tag/v1.0.18"/>
-    <title>v1.0.18</title>
-    <content type="html">&lt;h2&gt;Changelog&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/f017bd12e5082d613857388f86616f3a3228b125/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/f017bd12e5082d613857388f86616f3a3228b125&quot;&gt;&lt;tt&gt;f017bd1&lt;/tt&gt;&lt;/a&gt; refactor: refactor sub-packages of cmd and its test files&lt;/li&gt;
-&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/1b3ddfd766a93cc67f6bb1923de7dd26e4d266c1/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/1b3ddfd766a93cc67f6bb1923de7dd26e4d266c1&quot;&gt;&lt;tt&gt;1b3ddfd&lt;/tt&gt;&lt;/a&gt; refactor: refactor test files of internal packages&lt;/li&gt;
-&lt;/ul&gt;</content>
-    <author>
-      <name>github-actions[bot]</name>
-    </author>
-    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/in/15368?s=60&amp;v=4"/>
-  </entry>
-  <entry>
-    <id>tag:github.com,2008:Repository/621493965/v1.0.17</id>
-    <updated>2023-07-12T00:03:08+03:00</updated>
-    <link rel="alternate" type="text/html" href="https://github.com/hashicorp/consul/releases/tag/v1.0.17"/>
-    <title>v1.0.17</title>
-    <content type="html">&lt;h2&gt;Changelog&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/9ecbd7e658da75bbd43ddf09ba18f9aa04569e00/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/9ecbd7e658da75bbd43ddf09ba18f9aa04569e00&quot;&gt;&lt;tt&gt;9ecbd7e&lt;/tt&gt;&lt;/a&gt; build(deps): bump github.com/aws/aws-sdk-go from 1.44.294 to 1.44.298&lt;/li&gt;
-&lt;/ul&gt;</content>
-    <author>
-      <name>github-actions[bot]</name>
-    </author>
-    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/in/15368?s=60&amp;v=4"/>
-  </entry>
-  <entry>
-    <id>tag:github.com,2008:Repository/621493965/v1.0.16</id>
-    <updated>2023-07-09T23:25:51+03:00</updated>
-    <link rel="alternate" type="text/html" href="https://github.com/hashicorp/consul/releases/tag/v1.0.16"/>
-    <title>v1.0.16</title>
-    <content type="html">&lt;h2&gt;Changelog&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/18e7791a7ac93d8830c84eb81701356c6807171f/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/18e7791a7ac93d8830c84eb81701356c6807171f&quot;&gt;&lt;tt&gt;18e7791&lt;/tt&gt;&lt;/a&gt; refactor: decrease duplicated code&lt;/li&gt;
-&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/8e0b4ac3f31194cd5e216f3fccd5a3ba2636dd92/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/8e0b4ac3f31194cd5e216f3fccd5a3ba2636dd92&quot;&gt;&lt;tt&gt;8e0b4ac&lt;/tt&gt;&lt;/a&gt; refactor: get rid of cmd/utils packages phase&lt;/li&gt;
-&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/d4c6ef98a4f6557532e7cebe9613088a9c86973d/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/d4c6ef98a4f6557532e7cebe9613088a9c86973d&quot;&gt;&lt;tt&gt;d4c6ef9&lt;/tt&gt;&lt;/a&gt; refactor: start to get rid of cmd/utils packages&lt;/li&gt;
-&lt;/ul&gt;</content>
-    <author>
-      <name>github-actions[bot]</name>
-    </author>
-    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/in/15368?s=60&amp;v=4"/>
-  </entry>
-  <entry>
-    <id>tag:github.com,2008:Repository/621493965/v1.0.15</id>
-    <updated>2023-07-08T13:27:15+03:00</updated>
-    <link rel="alternate" type="text/html" href="https://github.com/hashicorp/consul/releases/tag/v1.0.15"/>
-    <title>v1.0.15</title>
-    <content type="html">&lt;h2&gt;Changelog&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/d5c36af253c6cecfc81d34a8003dae1a3539585e/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/d5c36af253c6cecfc81d34a8003dae1a3539585e&quot;&gt;&lt;tt&gt;d5c36af&lt;/tt&gt;&lt;/a&gt; feat: enable arm64 build&lt;/li&gt;
-&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/14859ce0dd2e71d10245c5240f2403d9120fd90c/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/14859ce0dd2e71d10245c5240f2403d9120fd90c&quot;&gt;&lt;tt&gt;14859ce&lt;/tt&gt;&lt;/a&gt; feat: enable dry-run and auto-approval for all non-read-only subcommands&lt;/li&gt;
-&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/93512ab6c9fa9800a73a8da276dad0ef101d4bdd/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/93512ab6c9fa9800a73a8da276dad0ef101d4bdd&quot;&gt;&lt;tt&gt;93512ab&lt;/tt&gt;&lt;/a&gt; refactor: decrease duplicate code&lt;/li&gt;
-&lt;/ul&gt;</content>
-    <author>
-      <name>github-actions[bot]</name>
-    </author>
-    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/in/15368?s=60&amp;v=4"/>
-  </entry>
+<!--   <entry> -->
+<!--     <id>tag:github.com,2008:Repository/621493965/v2.1.0</id> -->
+<!--     <updated>2023-07-18T00:46:55+03:00</updated> -->
+<!--     <link rel="alternate" type="text/html" href="https://github.com/hashicorp/consul/releases/tag/v2.1.0"/> -->
+<!--     <title>v2.1.0</title> -->
+<!--     <content type="html">&lt;h2&gt;Changelog&lt;/h2&gt; -->
+<!-- &lt;ul&gt; -->
+<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/a90b4eb74a7ce31a2fba70036e37e424f0cf7726/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/a90b4eb74a7ce31a2fba70036e37e424f0cf7726&quot;&gt;&lt;tt&gt;a90b4eb&lt;/tt&gt;&lt;/a&gt; build(deps): bump github.com/aws/aws-sdk-go from 1.44.298 to 1.44.300&lt;/li&gt; -->
+<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/99c3c5969198f11c1f1b5a501cad348957be42e9/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/99c3c5969198f11c1f1b5a501cad348957be42e9&quot;&gt;&lt;tt&gt;99c3c59&lt;/tt&gt;&lt;/a&gt; fix: fix code smell&lt;/li&gt; -->
+<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/1983da3d3cf20e00caa4ba69f4df945e0b59fd57/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/1983da3d3cf20e00caa4ba69f4df945e0b59fd57&quot;&gt;&lt;tt&gt;1983da3&lt;/tt&gt;&lt;/a&gt; refactoring: continue&lt;/li&gt; -->
+<!-- &lt;/ul&gt;</content> -->
+<!--     <author> -->
+<!--       <name>github-actions[bot]</name> -->
+<!--     </author> -->
+<!--     <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/in/15368?s=60&amp;v=4"/> -->
+<!--   </entry> -->
+<!--   <entry> -->
+<!--     <id>tag:github.com,2008:Repository/621493965/v2.0.0</id> -->
+<!--     <updated>2023-07-16T18:46:45+03:00</updated> -->
+<!--     <link rel="alternate" type="text/html" href="https://github.com/hashicorp/consul/releases/tag/v2.0.0"/> -->
+<!--     <title>v2.0.0</title> -->
+<!--     <content type="html">&lt;h2&gt;Changelog&lt;/h2&gt; -->
+<!-- &lt;ul&gt; -->
+<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/8c4b71773b19d4a447245c1fd0b70779d53315dd/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/8c4b71773b19d4a447245c1fd0b70779d53315dd&quot;&gt;&lt;tt&gt;8c4b717&lt;/tt&gt;&lt;/a&gt; chore: remove TODOS.md file&lt;/li&gt; -->
+<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/64209c9f270aeaac7c2e07b49a19fcae346d4916/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/64209c9f270aeaac7c2e07b49a19fcae346d4916&quot;&gt;&lt;tt&gt;64209c9&lt;/tt&gt;&lt;/a&gt; fix: fix clean module&lt;/li&gt; -->
+<!-- &lt;/ul&gt;</content> -->
+<!--     <author> -->
+<!--       <name>github-actions[bot]</name> -->
+<!--     </author> -->
+<!--     <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/in/15368?s=60&amp;v=4"/> -->
+<!--   </entry> -->
+<!--   <entry> -->
+<!--     <id>tag:github.com,2008:Repository/621493965/v1.0.19</id> -->
+<!--     <updated>2023-07-16T15:55:36+03:00</updated> -->
+<!--     <link rel="alternate" type="text/html" href="https://github.com/hashicorp/consul/releases/tag/v1.0.19"/> -->
+<!--     <title>v1.0.19</title> -->
+<!--     <content type="html">&lt;h2&gt;Changelog&lt;/h2&gt; -->
+<!-- &lt;ul&gt; -->
+<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/1772afda61c24125a2a29810502a96f27fd29ef0/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/1772afda61c24125a2a29810502a96f27fd29ef0&quot;&gt;&lt;tt&gt;1772afd&lt;/tt&gt;&lt;/a&gt; refactor: reduce duplicated code lines on both source files and test files&lt;/li&gt; -->
+<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/ad123369a6a289f260a380de3c66a506855892e0/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/ad123369a6a289f260a380de3c66a506855892e0&quot;&gt;&lt;tt&gt;ad12336&lt;/tt&gt;&lt;/a&gt; refactor: refactor test files of cmd packages&lt;/li&gt; -->
+<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/7115c20e8f9d5f06bdaf06ec5a5ebff577bebea1/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/7115c20e8f9d5f06bdaf06ec5a5ebff577bebea1&quot;&gt;&lt;tt&gt;7115c20&lt;/tt&gt;&lt;/a&gt; refactor: use MockClient from internal/aws package on cmds&lt;/li&gt; -->
+<!-- &lt;/ul&gt;</content> -->
+<!--     <author> -->
+<!--       <name>github-actions[bot]</name> -->
+<!--     </author> -->
+<!--     <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/in/15368?s=60&amp;v=4"/> -->
+<!--   </entry> -->
+<!--   <entry> -->
+<!--     <id>tag:github.com,2008:Repository/621493965/v1.0.18</id> -->
+<!--     <updated>2023-07-13T00:31:14+03:00</updated> -->
+<!--     <link rel="alternate" type="text/html" href="https://github.com/hashicorp/consul/releases/tag/v1.0.18"/> -->
+<!--     <title>v1.0.18</title> -->
+<!--     <content type="html">&lt;h2&gt;Changelog&lt;/h2&gt; -->
+<!-- &lt;ul&gt; -->
+<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/f017bd12e5082d613857388f86616f3a3228b125/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/f017bd12e5082d613857388f86616f3a3228b125&quot;&gt;&lt;tt&gt;f017bd1&lt;/tt&gt;&lt;/a&gt; refactor: refactor sub-packages of cmd and its test files&lt;/li&gt; -->
+<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/1b3ddfd766a93cc67f6bb1923de7dd26e4d266c1/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/1b3ddfd766a93cc67f6bb1923de7dd26e4d266c1&quot;&gt;&lt;tt&gt;1b3ddfd&lt;/tt&gt;&lt;/a&gt; refactor: refactor test files of internal packages&lt;/li&gt; -->
+<!-- &lt;/ul&gt;</content> -->
+<!--     <author> -->
+<!--       <name>github-actions[bot]</name> -->
+<!--     </author> -->
+<!--     <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/in/15368?s=60&amp;v=4"/> -->
+<!--   </entry> -->
+<!--   <entry> -->
+<!--     <id>tag:github.com,2008:Repository/621493965/v1.0.17</id> -->
+<!--     <updated>2023-07-12T00:03:08+03:00</updated> -->
+<!--     <link rel="alternate" type="text/html" href="https://github.com/hashicorp/consul/releases/tag/v1.0.17"/> -->
+<!--     <title>v1.0.17</title> -->
+<!--     <content type="html">&lt;h2&gt;Changelog&lt;/h2&gt; -->
+<!-- &lt;ul&gt; -->
+<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/9ecbd7e658da75bbd43ddf09ba18f9aa04569e00/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/9ecbd7e658da75bbd43ddf09ba18f9aa04569e00&quot;&gt;&lt;tt&gt;9ecbd7e&lt;/tt&gt;&lt;/a&gt; build(deps): bump github.com/aws/aws-sdk-go from 1.44.294 to 1.44.298&lt;/li&gt; -->
+<!-- &lt;/ul&gt;</content> -->
+<!--     <author> -->
+<!--       <name>github-actions[bot]</name> -->
+<!--     </author> -->
+<!--     <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/in/15368?s=60&amp;v=4"/> -->
+<!--   </entry> -->
+<!--   <entry> -->
+<!--     <id>tag:github.com,2008:Repository/621493965/v1.0.16</id> -->
+<!--     <updated>2023-07-09T23:25:51+03:00</updated> -->
+<!--     <link rel="alternate" type="text/html" href="https://github.com/hashicorp/consul/releases/tag/v1.0.16"/> -->
+<!--     <title>v1.0.16</title> -->
+<!--     <content type="html">&lt;h2&gt;Changelog&lt;/h2&gt; -->
+<!-- &lt;ul&gt; -->
+<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/18e7791a7ac93d8830c84eb81701356c6807171f/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/18e7791a7ac93d8830c84eb81701356c6807171f&quot;&gt;&lt;tt&gt;18e7791&lt;/tt&gt;&lt;/a&gt; refactor: decrease duplicated code&lt;/li&gt; -->
+<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/8e0b4ac3f31194cd5e216f3fccd5a3ba2636dd92/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/8e0b4ac3f31194cd5e216f3fccd5a3ba2636dd92&quot;&gt;&lt;tt&gt;8e0b4ac&lt;/tt&gt;&lt;/a&gt; refactor: get rid of cmd/utils packages phase&lt;/li&gt; -->
+<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/d4c6ef98a4f6557532e7cebe9613088a9c86973d/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/d4c6ef98a4f6557532e7cebe9613088a9c86973d&quot;&gt;&lt;tt&gt;d4c6ef9&lt;/tt&gt;&lt;/a&gt; refactor: start to get rid of cmd/utils packages&lt;/li&gt; -->
+<!-- &lt;/ul&gt;</content> -->
+<!--     <author> -->
+<!--       <name>github-actions[bot]</name> -->
+<!--     </author> -->
+<!--     <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/in/15368?s=60&amp;v=4"/> -->
+<!--   </entry> -->
+<!--   <entry> -->
+<!--     <id>tag:github.com,2008:Repository/621493965/v1.0.15</id> -->
+<!--     <updated>2023-07-08T13:27:15+03:00</updated> -->
+<!--     <link rel="alternate" type="text/html" href="https://github.com/hashicorp/consul/releases/tag/v1.0.15"/> -->
+<!--     <title>v1.0.15</title> -->
+<!--     <content type="html">&lt;h2&gt;Changelog&lt;/h2&gt; -->
+<!-- &lt;ul&gt; -->
+<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/d5c36af253c6cecfc81d34a8003dae1a3539585e/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/d5c36af253c6cecfc81d34a8003dae1a3539585e&quot;&gt;&lt;tt&gt;d5c36af&lt;/tt&gt;&lt;/a&gt; feat: enable arm64 build&lt;/li&gt; -->
+<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/14859ce0dd2e71d10245c5240f2403d9120fd90c/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/14859ce0dd2e71d10245c5240f2403d9120fd90c&quot;&gt;&lt;tt&gt;14859ce&lt;/tt&gt;&lt;/a&gt; feat: enable dry-run and auto-approval for all non-read-only subcommands&lt;/li&gt; -->
+<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/93512ab6c9fa9800a73a8da276dad0ef101d4bdd/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/93512ab6c9fa9800a73a8da276dad0ef101d4bdd&quot;&gt;&lt;tt&gt;93512ab&lt;/tt&gt;&lt;/a&gt; refactor: decrease duplicate code&lt;/li&gt; -->
+<!-- &lt;/ul&gt;</content> -->
+<!--     <author> -->
+<!--       <name>github-actions[bot]</name> -->
+<!--     </author> -->
+<!--     <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/in/15368?s=60&amp;v=4"/> -->
+<!--   </entry> -->
 <!--   <entry> -->
 <!--     <id>tag:github.com,2008:Repository/621493965/v1.0.14</id> -->
 <!--     <updated>2023-07-04T21:09:14+03:00</updated> -->

@@ -1,7 +1,7 @@
-announcer:
-  slack:
-    enabled: true
-    webhookUrl: asdfasdfasdf
+#announcer:
+#  slack:
+#    enabled: true
+#    webhookUrl: asdfasdfasdf
 storage:
   s3:
     provider: aws
