@@ -6,9 +6,8 @@ import (
 
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce/slack"
-	"github.com/bilalcaliskan/rss-feed-filterer/internal/logging"
-
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/config"
+	"github.com/bilalcaliskan/rss-feed-filterer/internal/logging"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/storage/aws"
 )
 
@@ -21,7 +20,12 @@ const (
 // create a channel to act as a semaphore
 var sem = make(chan struct{}, 5) // allow up to 5 concurrent access
 
-func Filter(ctx context.Context, cfg config.Config, client aws.S3ClientAPI) error {
+func Filter(ctx context.Context, cfg config.Config) error {
+	client, err := aws.CreateClient(cfg.AccessKey, cfg.SecretKey, cfg.Region)
+	if err != nil {
+		return err
+	}
+
 	if !aws.IsBucketExists(client, cfg.BucketName) {
 		return fmt.Errorf("bucket %s not found", cfg.BucketName)
 	}

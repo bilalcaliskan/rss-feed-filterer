@@ -216,6 +216,11 @@ func (r *ReleaseChecker) extractProjectName(repoUrl string) (string, error) {
 		return "", fmt.Errorf("invalid github url format")
 	}
 
+	projectName := fmt.Sprintf("%s/%s", parts[1], parts[2])
+	if strings.HasPrefix(projectName, "/") || strings.HasSuffix(projectName, "/") {
+		return "", fmt.Errorf("invalid project name")
+	}
+
 	return fmt.Sprintf("%s/%s", parts[1], parts[2]), nil
 }
 
