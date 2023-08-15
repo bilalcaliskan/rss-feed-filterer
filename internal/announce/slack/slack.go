@@ -3,13 +3,25 @@ package slack
 import (
 	"fmt"
 
+	api "github.com/slack-go/slack"
+
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce"
 )
 
+type SlackAPI interface {
+	PostWebhook(url string, msg *api.WebhookMessage) error
+}
+
+type SlackService struct{}
+
+func (r *SlackService) PostWebhook(url string, msg *api.WebhookMessage) error {
+	return api.PostWebhook(url, msg)
+}
+
 type SlackAnnouncer struct {
 	WebhookURL string
-	//SlackPayload
-	Enabled bool
+	Enabled    bool
+	Service    SlackAPI
 }
 
 type SlackPayload struct {
@@ -20,10 +32,11 @@ type SlackPayload struct {
 	Username    string
 }
 
-func NewSlackAnnouncer(url string, enabled bool) *SlackAnnouncer {
+func NewSlackAnnouncer(url string, enabled bool, service SlackAPI) *SlackAnnouncer {
 	return &SlackAnnouncer{
 		WebhookURL: url,
 		Enabled:    enabled,
+		Service:    service,
 	}
 }
 
@@ -33,22 +46,14 @@ func (sa *SlackAnnouncer) Notify(payload announce.AnnouncerPayload) error {
 		return fmt.Errorf("invalid payload type for SlackAnnouncer")
 	}
 
-	fmt.Println("inside notify")
-	fmt.Println(slackPayload)
-	return nil
-	//slackPayload, ok := payload.(SlackPayload)
-	//if !ok {
-	//	return fmt.Errorf("invalid payload type for SlackAnnouncer")
-	//}
-	//
-	//msg := api.WebhookMessage{
-	//	Attachments: []api.Attachment{},
-	//	Username:    slackPayload.Username,
-	//	IconURL:     slackPayload.IconUrl,
-	//	Text:        fmt.Sprintf("%s %s is out! Check it out at %s", slackPayload.ProjectName, slackPayload.Version, slackPayload.URL),
-	//}
-	//
-	//return api.PostWebhook(sa.WebhookURL, &msg)
+	msg := api.WebhookMessage{
+		Attachments: []api.Attachment{},
+		Username:    slackPayload.Username,
+		IconURL:     slackPayload.IconUrl,
+		Text:        fmt.Sprintf("%s %s is out! Check it out at %s", slackPayload.ProjectName, slackPayload.Version, slackPayload.URL),
+	}
+
+	return sa.Service.PostWebhook(sa.WebhookURL, &msg)
 }
 
 func (sa *SlackAnnouncer) IsEnabled() bool {

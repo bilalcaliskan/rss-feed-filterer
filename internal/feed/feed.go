@@ -33,7 +33,7 @@ func Filter(ctx context.Context, cfg config.Config) error {
 	var announcer announce.Announcer
 
 	if cfg.Announcer.Slack.Enabled {
-		announcer = slack.NewSlackAnnouncer(cfg.Announcer.Slack.WebhookUrl, true)
+		announcer = slack.NewSlackAnnouncer(cfg.Announcer.Slack.WebhookUrl, true, &slack.SlackService{})
 	} else {
 		announcer = &announce.NoopAnnouncer{}
 	}
