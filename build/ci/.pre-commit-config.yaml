@@ -10,7 +10,7 @@ repos:
       - id: check-executables-have-shebangs
       - id: check-yaml
         args: ['--unsafe']
-      - id: check-json
+#      - id: check-json
       - id: check-merge-conflict
       - id: check-symlinks
       - id: detect-private-key

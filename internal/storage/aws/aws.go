@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"log"
 	"strings"
 	"sync"
 
@@ -52,7 +51,7 @@ func GetReleases(client S3ClientAPI, bucketName, key string) (releases []types2.
 	mu.Unlock()
 
 	if err := json.Unmarshal(buf.Bytes(), &releases); err != nil {
-		log.Fatalf("failed to unmarshal, %v", err)
+		return nil, err
 	}
 
 	return releases, nil
