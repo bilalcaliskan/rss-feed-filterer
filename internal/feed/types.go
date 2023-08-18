@@ -101,10 +101,7 @@ func (r *ReleaseChecker) checkFeed(sem chan struct{}, projectName string, repo c
 	for retries := 0; retries < maxRetries; retries++ {
 		feed, err := r.fetchFeed(projectName)
 		if err != nil {
-			r.logger.Warn().
-				Str("error", err.Error()).
-				Str("url", repo.Url).
-				Msg("an error occurred while fetching feed, retrying...")
+			r.logger.Warn().Err(err).Str("url", repo.Url).Msg("an error occurred while fetching feed, retrying...")
 			time.Sleep(time.Second * 5)
 			continue
 		}
@@ -120,7 +117,7 @@ func (r *ReleaseChecker) checkFeed(sem chan struct{}, projectName string, repo c
 		if aws.IsObjectExists(r.S3ClientAPI, r.bucketName, fmt.Sprintf("%s/%s", projectName, releaseFileKey)) {
 			previousReleases, err := aws.GetReleases(r.S3ClientAPI, r.bucketName, fmt.Sprintf("%s/%s", projectName, releaseFileKey))
 			if err != nil {
-				r.logger.Warn().Msg("an error occured while getting releases from bucket")
+				r.logger.Warn().Err(err).Msg("an error occured while getting releases from bucket")
 				continue
 			}
 
@@ -141,7 +138,7 @@ func (r *ReleaseChecker) checkFeed(sem chan struct{}, projectName string, repo c
 
 		r.logger.Info().Msg("putting diffs into bucket")
 		if err := aws.PutReleases(r.S3ClientAPI, r.bucketName, fmt.Sprintf("%s/%s", projectName, releaseFileKey), allReleases); err != nil {
-			r.logger.Warn().Msg("an error occured while putting releases into bucket")
+			r.logger.Warn().Err(err).Msg("an error occured while putting releases into bucket")
 			continue
 		}
 
