@@ -206,6 +206,7 @@ func (r *ReleaseChecker) extractProjectName(repoUrl string) (string, error) {
 		return "", err
 	}
 
+	// TODO: what about other cases?
 	parts := strings.Split(u.Path, "/")
 	if len(parts) < 3 {
 		return "", fmt.Errorf("invalid github url format")

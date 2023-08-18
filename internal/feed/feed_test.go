@@ -20,6 +20,7 @@ func TestFilter(t *testing.T) {
 	cases := []struct {
 		caseName       string
 		shouldPass     bool
+		configPath     string
 		headBucketFunc func(ctx context.Context, params *s3.HeadBucketInput, optFns ...func(*s3.Options)) (*s3.HeadBucketOutput, error)
 		headObjectFunc func(ctx context.Context, params *s3.HeadObjectInput, optFns ...func(*s3.Options)) (*s3.HeadObjectOutput, error)
 		getObjectFunc  func(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error)
@@ -28,6 +29,7 @@ func TestFilter(t *testing.T) {
 		{
 			"Success",
 			true,
+			"../../testdata/config.yaml",
 			func(ctx context.Context, params *s3.HeadBucketInput, optFns ...func(*s3.Options)) (*s3.HeadBucketOutput, error) {
 				return &s3.HeadBucketOutput{}, nil
 			},
@@ -50,6 +52,7 @@ func TestFilter(t *testing.T) {
 		{
 			"Failure caused by bucket does not exists",
 			false,
+			"../../testdata/config.yaml",
 			func(ctx context.Context, params *s3.HeadBucketInput, optFns ...func(*s3.Options)) (*s3.HeadBucketOutput, error) {
 				return nil, &types.NoSuchBucket{}
 			},
@@ -67,7 +70,7 @@ func TestFilter(t *testing.T) {
 		mockS3.GetObjectAPI = tc.getObjectFunc
 		mockS3.PutObjectAPI = tc.putObjectFunc
 
-		cfg, err := config.ReadConfig("../../resources/sample_config.yaml")
+		cfg, err := config.ReadConfig(tc.configPath)
 		assert.Nil(t, err)
 		assert.NotNil(t, cfg)
 
