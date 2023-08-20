@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/mmcdole/gofeed"
+
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/config"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/logging"
@@ -30,9 +32,9 @@ func Filter(ctx context.Context, cfg config.Config, client aws.S3ClientAPI, anno
 
 	for _, repo := range cfg.Repositories {
 		go func(repo config.Repository) {
-			checker := NewReleaseChecker(client, repo, cfg.BucketName, logging.GetLogger(), announcer)
+			checker := NewReleaseChecker(client, repo, gofeed.NewParser(), cfg.BucketName, logging.GetLogger(), announcer)
 
-			// acquire the semaphore
+			//// acquire the semaphore
 			sem <- struct{}{}
 			checker.CheckGithubReleases(ctx, sem)
 		}(repo)

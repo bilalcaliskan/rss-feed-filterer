@@ -17,20 +17,24 @@ import (
 	"github.com/rs/zerolog"
 )
 
+type Parser interface {
+	ParseURL(url string) (*gofeed.Feed, error)
+}
+
 type ReleaseChecker struct {
 	aws.S3ClientAPI
 	bucketName string
-	*gofeed.Parser
+	Parser
 	logger zerolog.Logger
 	config.Repository
 	announce.Announcer
 }
 
-func NewReleaseChecker(client aws.S3ClientAPI, repo config.Repository, bucketName string, logger zerolog.Logger, announcer announce.Announcer) *ReleaseChecker {
+func NewReleaseChecker(client aws.S3ClientAPI, repo config.Repository, parser Parser, bucketName string, logger zerolog.Logger, announcer announce.Announcer) *ReleaseChecker {
 	return &ReleaseChecker{
 		S3ClientAPI: client,
 		bucketName:  bucketName,
-		Parser:      gofeed.NewParser(),
+		Parser:      parser,
 		logger:      logger,
 		Repository:  repo,
 		Announcer:   announcer,
@@ -40,7 +44,7 @@ func NewReleaseChecker(client aws.S3ClientAPI, repo config.Repository, bucketNam
 func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, sem chan struct{}) {
 	projectName, err := r.extractProjectName(r.Url)
 	if err != nil {
-		r.logger.Error().Err(err).Msg("Failed to extract project name")
+		r.logger.Error().Err(err).Msg("failed to extract project name")
 		return
 	}
 
@@ -51,12 +55,14 @@ func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, sem chan struc
 
 	// Run immediately since ticker does not run on first hit
 	r.checkFeed(sem, projectName, r.Repository)
+	r.logger.Info().Msg("first checkFeed returned")
 
 	for {
 		select {
 		case <-ctx.Done():
 			return
 		case <-ticker.C:
+			r.logger.Info().Msg("ticker ticked")
 			r.checkFeed(sem, projectName, r.Repository)
 		}
 	}
