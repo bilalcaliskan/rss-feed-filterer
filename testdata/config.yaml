@@ -1,0 +1,16 @@
+#announcer:
+#  slack:
+#    enabled: true
+#    webhookUrl: asdfasdfasdf
+storage:
+  s3:
+    provider: aws
+    accessKey: dsddsdssddsf
+    secretKey: asdfasdfasdfasdf
+    region: us-east-1
+    bucketName: asdfasdfadsf
+repositories:
+  - name: consul
+    description: sample description
+    url: "https://github.com/hashicorp/consul"
+    checkIntervalMinutes: 30

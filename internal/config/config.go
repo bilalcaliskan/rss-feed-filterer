@@ -22,8 +22,8 @@ import (
 //	return config
 //}
 
-func ReadConfig() (conf Config, err error) {
-	file, err := os.ReadFile("resources/sample_config.yaml")
+func ReadConfig(path string) (conf Config, err error) {
+	file, err := os.ReadFile(path)
 	if err != nil {
 		return conf, errors.Wrap(err, "an error occurred while reading config file")
 	}

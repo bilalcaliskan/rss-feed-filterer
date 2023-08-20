@@ -17,20 +17,24 @@ import (
 	"github.com/rs/zerolog"
 )
 
+type Parser interface {
+	ParseURL(url string) (*gofeed.Feed, error)
+}
+
 type ReleaseChecker struct {
 	aws.S3ClientAPI
 	bucketName string
-	*gofeed.Parser
+	Parser
 	logger zerolog.Logger
 	config.Repository
 	announce.Announcer
 }
 
-func NewReleaseChecker(client aws.S3ClientAPI, repo config.Repository, bucketName string, logger zerolog.Logger, announcer announce.Announcer) *ReleaseChecker {
+func NewReleaseChecker(client aws.S3ClientAPI, repo config.Repository, parser Parser, bucketName string, logger zerolog.Logger, announcer announce.Announcer) *ReleaseChecker {
 	return &ReleaseChecker{
 		S3ClientAPI: client,
 		bucketName:  bucketName,
-		Parser:      gofeed.NewParser(),
+		Parser:      parser,
 		logger:      logger,
 		Repository:  repo,
 		Announcer:   announcer,
@@ -40,7 +44,7 @@ func NewReleaseChecker(client aws.S3ClientAPI, repo config.Repository, bucketNam
 func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, sem chan struct{}) {
 	projectName, err := r.extractProjectName(r.Url)
 	if err != nil {
-		r.logger.Error().Err(err).Msg("Failed to extract project name")
+		r.logger.Error().Err(err).Msg("failed to extract project name")
 		return
 	}
 
@@ -51,12 +55,14 @@ func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, sem chan struc
 
 	// Run immediately since ticker does not run on first hit
 	r.checkFeed(sem, projectName, r.Repository)
+	r.logger.Info().Msg("first checkFeed returned")
 
 	for {
 		select {
 		case <-ctx.Done():
 			return
 		case <-ticker.C:
+			r.logger.Info().Msg("ticker ticked")
 			r.checkFeed(sem, projectName, r.Repository)
 		}
 	}
@@ -101,10 +107,7 @@ func (r *ReleaseChecker) checkFeed(sem chan struct{}, projectName string, repo c
 	for retries := 0; retries < maxRetries; retries++ {
 		feed, err := r.fetchFeed(projectName)
 		if err != nil {
-			r.logger.Warn().
-				Str("error", err.Error()).
-				Str("url", repo.Url).
-				Msg("an error occurred while fetching feed, retrying...")
+			r.logger.Warn().Err(err).Str("url", repo.Url).Msg("an error occurred while fetching feed, retrying...")
 			time.Sleep(time.Second * 5)
 			continue
 		}
@@ -120,7 +123,7 @@ func (r *ReleaseChecker) checkFeed(sem chan struct{}, projectName string, repo c
 		if aws.IsObjectExists(r.S3ClientAPI, r.bucketName, fmt.Sprintf("%s/%s", projectName, releaseFileKey)) {
 			previousReleases, err := aws.GetReleases(r.S3ClientAPI, r.bucketName, fmt.Sprintf("%s/%s", projectName, releaseFileKey))
 			if err != nil {
-				r.logger.Warn().Msg("an error occured while getting releases from bucket")
+				r.logger.Warn().Err(err).Msg("an error occured while getting releases from bucket")
 				continue
 			}
 
@@ -141,7 +144,7 @@ func (r *ReleaseChecker) checkFeed(sem chan struct{}, projectName string, repo c
 
 		r.logger.Info().Msg("putting diffs into bucket")
 		if err := aws.PutReleases(r.S3ClientAPI, r.bucketName, fmt.Sprintf("%s/%s", projectName, releaseFileKey), allReleases); err != nil {
-			r.logger.Warn().Msg("an error occured while putting releases into bucket")
+			r.logger.Warn().Err(err).Msg("an error occured while putting releases into bucket")
 			continue
 		}
 
@@ -209,6 +212,7 @@ func (r *ReleaseChecker) extractProjectName(repoUrl string) (string, error) {
 		return "", err
 	}
 
+	// TODO: what about other cases?
 	parts := strings.Split(u.Path, "/")
 	if len(parts) < 3 {
 		return "", fmt.Errorf("invalid github url format")

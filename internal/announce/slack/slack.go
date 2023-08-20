@@ -3,6 +3,8 @@ package slack
 import (
 	"fmt"
 
+	"github.com/stretchr/testify/mock"
+
 	api "github.com/slack-go/slack"
 
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce"
@@ -16,6 +18,10 @@ type SlackService struct{}
 
 func (r *SlackService) PostWebhook(url string, msg *api.WebhookMessage) error {
 	return api.PostWebhook(url, msg)
+}
+
+type MockSlackService struct {
+	mock.Mock
 }
 
 type SlackAnnouncer struct {
