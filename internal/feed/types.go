@@ -41,13 +41,7 @@ func NewReleaseChecker(client aws.S3ClientAPI, repo config.Repository, parser Pa
 	}
 }
 
-func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, sem chan struct{}) {
-	projectName, err := r.extractProjectName(r.Url)
-	if err != nil {
-		r.logger.Error().Err(err).Msg("failed to extract project name")
-		return
-	}
-
+func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, sem chan struct{}, projectName string) {
 	r.logger = r.logger.With().Str("projectName", projectName).Logger()
 
 	ticker := time.NewTicker(time.Duration(r.CheckIntervalMinutes) * time.Minute)
@@ -55,14 +49,12 @@ func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, sem chan struc
 
 	// Run immediately since ticker does not run on first hit
 	r.checkFeed(sem, projectName, r.Repository)
-	r.logger.Info().Msg("first checkFeed returned")
 
 	for {
 		select {
 		case <-ctx.Done():
 			return
 		case <-ticker.C:
-			r.logger.Info().Msg("ticker ticked")
 			r.checkFeed(sem, projectName, r.Repository)
 		}
 	}
@@ -100,9 +92,9 @@ func (r *ReleaseChecker) fetchFeed(projectName string) (*gofeed.Feed, error) {
 }
 
 func (r *ReleaseChecker) checkFeed(sem chan struct{}, projectName string, repo config.Repository) {
-	defer func() {
-		<-sem // release the semaphore
-	}()
+	//defer func() {
+	//	<-sem // release the semaphore
+	//}()
 
 	for retries := 0; retries < maxRetries; retries++ {
 		feed, err := r.fetchFeed(projectName)
@@ -206,8 +198,8 @@ func (r *ReleaseChecker) getDiff(fetchedReleases []types.Release, previousReleas
 	return diff
 }
 
-func (r *ReleaseChecker) extractProjectName(repoUrl string) (string, error) {
-	u, err := url.Parse(repoUrl)
+func (r *ReleaseChecker) extractProjectName() (string, error) {
+	u, err := url.Parse(r.Url)
 	if err != nil {
 		return "", err
 	}

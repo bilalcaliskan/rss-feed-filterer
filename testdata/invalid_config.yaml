@@ -14,3 +14,7 @@ repositories:
     description: sample description
     url: "https://github.com/hashicorp"
     checkIntervalMinutes: 30
+  - name: consul2
+    description: sample description
+    url: "https://github.com/hashicorp//consul"
+    checkIntervalMinutes: 30

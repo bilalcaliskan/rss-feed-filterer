@@ -13,7 +13,8 @@ import (
 )
 
 const (
-	maxRetries         = 3
+	maxRetries = 3
+	//defaultRegex       = `^https://github\.com/[^/]+/[^/]+/releases/tag/(v?\d+\.\d+\.\d+)$`
 	defaultSemverRegex = `/(v?\d+\.\d+\.\d+)$`
 	releaseFileKey     = "releases.json"
 )
@@ -34,9 +35,14 @@ func Filter(ctx context.Context, cfg config.Config, client aws.S3ClientAPI, anno
 		go func(repo config.Repository) {
 			checker := NewReleaseChecker(client, repo, gofeed.NewParser(), cfg.BucketName, logging.GetLogger(), announcer)
 
-			//// acquire the semaphore
-			sem <- struct{}{}
-			checker.CheckGithubReleases(ctx, sem)
+			projectName, err := checker.extractProjectName()
+			if err != nil {
+				logger.Error().Err(err).Msg("failed to extract project name")
+				return
+			}
+
+			sem <- struct{}{} // acquire the semaphore
+			checker.CheckGithubReleases(ctx, sem, projectName)
 		}(repo)
 	}
 
