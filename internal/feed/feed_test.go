@@ -48,13 +48,23 @@ func TestFilter(t *testing.T) {
 				return &s3.PutObjectOutput{}, nil
 			},
 		},
-
 		{
 			"Failure caused by bucket does not exists",
 			false,
 			"../../testdata/config.yaml",
 			func(ctx context.Context, params *s3.HeadBucketInput, optFns ...func(*s3.Options)) (*s3.HeadBucketOutput, error) {
 				return nil, &types.NoSuchBucket{}
+			},
+			nil,
+			nil,
+			nil,
+		},
+		{
+			"Failure caused by invalid project name",
+			true,
+			"../../testdata/invalid_config.yaml",
+			func(ctx context.Context, params *s3.HeadBucketInput, optFns ...func(*s3.Options)) (*s3.HeadBucketOutput, error) {
+				return &s3.HeadBucketOutput{}, nil
 			},
 			nil,
 			nil,
