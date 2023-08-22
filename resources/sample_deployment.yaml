@@ -1,0 +1,28 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: rss-feed-filterer
+  name: rss-feed-filterer
+  namespace: default
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: rss-feed-filterer
+      deployment: rss-feed-filterer
+  template:
+    metadata:
+      labels:
+        app: rss-feed-filterer
+        deployment: rss-feed-filterer
+    spec:
+      serviceAccountName: rss-feed-filterer
+      containers:
+        - image: 'docker.io/bilalcaliskan/rss-feed-filterer:latest'
+          command: ["./main"]
+          imagePullPolicy: Always
+          name: rss-feed-filterer
