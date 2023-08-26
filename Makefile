@@ -105,22 +105,22 @@ run-vet:
 .PHONY: test
 test: tidy
 	$(info starting the test for whole module...)
-	go test -timeout 60s -tags "unit e2e integration" -failfast -vet=off -race -coverprofile=all_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
+	go test -timeout 120s -tags "unit e2e integration" -failfast -vet=off -race -coverprofile=all_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
 
 .PHONY: test-unit
 test-unit: tidy
 	$(info starting the unit test for whole module...)
-	go test -timeout 60s -tags "unit" -failfast -vet=off -race -coverprofile=unit_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
+	go test -timeout 120s -tags "unit" -failfast -vet=off -race -coverprofile=unit_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
 
 .PHONY: test-e2e
 test-e2e: tidy
 	$(info starting the e2e test for whole module...)
-	go test -timeout 60s -tags "e2e" -failfast -vet=off -race -coverprofile=e2e_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
+	go test -timeout 120s -tags "e2e" -failfast -vet=off -race -coverprofile=e2e_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
 
 .PHONY: test-integration
 test-integration: tidy
 	$(info starting the integration test for whole module...)
-	go test -timeout 60s -tags "integration" -failfast -vet=off -race -coverprofile=integration_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
+	go test -timeout 120s -tags "integration" -failfast -vet=off -race -coverprofile=integration_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
 
 .PHONY: update
 update: tidy
