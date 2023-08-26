@@ -118,8 +118,6 @@ jobs:
           cache: true
       - name: Build
         run: make -s build
-        env:
-          API_TOKEN: ${{ secrets.API_TOKEN }}
 
   tag:
     runs-on: ubuntu-latest

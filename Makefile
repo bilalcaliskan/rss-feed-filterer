@@ -105,22 +105,22 @@ run-vet:
 .PHONY: test
 test: tidy
 	$(info starting the test for whole module...)
-	go test -tags "unit e2e integration" -failfast -vet=off -race -coverprofile=all_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
+	go test -timeout 60s -tags "unit e2e integration" -failfast -vet=off -race -coverprofile=all_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
 
 .PHONY: test-unit
 test-unit: tidy
 	$(info starting the unit test for whole module...)
-	go test -tags "unit" -failfast -vet=off -race -coverprofile=unit_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
+	go test -timeout 60s -tags "unit" -failfast -vet=off -race -coverprofile=unit_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
 
 .PHONY: test-e2e
 test-e2e: tidy
 	$(info starting the e2e test for whole module...)
-	go test -tags "e2e" -failfast -vet=off -race -coverprofile=e2e_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
+	go test -timeout 60s -tags "e2e" -failfast -vet=off -race -coverprofile=e2e_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
 
 .PHONY: test-integration
 test-integration: tidy
 	$(info starting the integration test for whole module...)
-	go test -tags "integration" -failfast -vet=off -race -coverprofile=integration_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
+	go test -timeout 60s -tags "integration" -failfast -vet=off -race -coverprofile=integration_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
 
 .PHONY: update
 update: tidy
@@ -134,14 +134,3 @@ build: tidy
 .PHONY: run
 run: tidy
 	go run main.go
-
-.PHONY: cross-compile
-cross-compile:
-	GOOS=freebsd GOARCH=386 go build -o bin/main-freebsd-386 main.go
-	GOOS=darwin GOARCH=386 go build -o bin/main-darwin-386 main.go
-	GOOS=linux GOARCH=386 go build -o bin/main-linux-386 main.go
-	GOOS=windows GOARCH=386 go build -o bin/main-windows-386 main.go
-	GOOS=freebsd GOARCH=amd64 go build -o bin/main-freebsd-amd64 main.go
-	GOOS=darwin GOARCH=amd64 go build -o bin/main-darwin-amd64 main.go
-	GOOS=linux GOARCH=amd64 go build -o bin/main-linux-amd64 main.go
-	GOOS=windows GOARCH=amd64 go build -o bin/main-windows-amd64 main.go
