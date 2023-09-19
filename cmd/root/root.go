@@ -23,7 +23,7 @@ var (
 	ver     = version.Get()
 	logger  zerolog.Logger
 	opts    *options.RootOptions
-	rootCmd = &cobra.Command{
+	RootCmd = &cobra.Command{
 		Use:           "rss-feed-filterer",
 		Short:         "A tool designed to efficiently monitor, filter, and notify users about new releases in software projects based on their RSS feeds",
 		Version:       ver.GitVersion,
@@ -91,11 +91,11 @@ mechanism to track multiple project releases.`,
 func init() {
 	logger = logging.GetLogger()
 	opts = options.GetRootOptions()
-	opts.InitFlags(rootCmd)
+	opts.InitFlags(RootCmd)
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
+// This is called by main.main(). It only needs to happen once to the RootCmd.
 func Execute() error {
-	return rootCmd.Execute()
+	return RootCmd.Execute()
 }
