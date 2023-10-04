@@ -73,6 +73,9 @@ mechanism to track multiple project releases.`,
 
 			return nil
 		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return nil
+		},
 	}
 )
 

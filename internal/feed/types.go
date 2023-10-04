@@ -63,7 +63,7 @@ func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, sem chan struc
 func (r *ReleaseChecker) fetchFeed(projectName string) (*gofeed.Feed, error) {
 	r.logger.Info().Str("projectName", projectName).Msg("trying to fetch the feed")
 
-	//file, err := os.Open("testdata/releases.atom")
+	//file, err := os.Open("test/releases.atom")
 	//if err != nil {
 	//	r.logger.Warn().Str("error", err.Error()).Msg("Error opening file")
 	//	return nil, err

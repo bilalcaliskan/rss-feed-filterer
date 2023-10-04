@@ -22,3 +22,8 @@ func TestRootOptions_InitFlags(t *testing.T) {
 	cmd := &cobra.Command{}
 	opts.InitFlags(cmd)
 }
+
+func TestRootOptions_SetZeroValues(t *testing.T) {
+	opts := GetRootOptions()
+	opts.SetZeroValues()
+}

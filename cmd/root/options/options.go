@@ -33,3 +33,8 @@ func (opts *RootOptions) InitFlags(cmd *cobra.Command) {
 func GetRootOptions() *RootOptions {
 	return rootOptions
 }
+
+func (opts *RootOptions) SetZeroValues() {
+	opts.ConfigFilePath = ""
+	opts.VerboseLog = false
+}

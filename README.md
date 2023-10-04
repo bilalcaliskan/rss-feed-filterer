@@ -24,7 +24,7 @@ RSS Feed Filterer is a sophisticated tool designed to efficiently monitor, filte
 
 ## Installation
 ### Kubernetes
-You can use [sample deployment file](resources/sample_deployment.yaml) to deploy your Kubernetes cluster.
+You can use [sample deployment file](deployments/sample_deployment.yaml) to deploy your Kubernetes cluster.
 
 ### Binary
 Binary can be downloaded from [Releases](https://github.com/bilalcaliskan/rss-feed-filterer/releases) page.

@@ -153,7 +153,7 @@ func TestGetReleases(t *testing.T) {
 			},
 			true,
 			func(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error) {
-				content, err := os.ReadFile("../../../testdata/releases.json")
+				content, err := os.ReadFile("../../../test/releases.json")
 				if err != nil {
 					return nil, err
 				}
@@ -170,7 +170,7 @@ func TestGetReleases(t *testing.T) {
 			nil,
 			false,
 			func(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error) {
-				content, err := os.ReadFile("../../../testdata/releases_invalid.json")
+				content, err := os.ReadFile("../../../test/releases_invalid.json")
 				if err != nil {
 					return nil, err
 				}

@@ -23,6 +23,6 @@ spec:
       serviceAccountName: rss-feed-filterer
       containers:
         - image: 'docker.io/bilalcaliskan/rss-feed-filterer:latest'
-          command: ["./main"]
+          command: ["rss-feed-filterer", "start"]
           imagePullPolicy: Always
           name: rss-feed-filterer
