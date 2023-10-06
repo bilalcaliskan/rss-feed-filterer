@@ -96,7 +96,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 				return &s3.HeadObjectOutput{}, nil
 			},
 			func(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error) {
-				content, err := os.ReadFile("../../testdata/releases.json")
+				content, err := os.ReadFile("../../test/releases.json")
 				if err != nil {
 					return nil, err
 				}
@@ -147,7 +147,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 				return &s3.HeadObjectOutput{}, nil
 			},
 			func(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error) {
-				content, err := os.ReadFile("../../testdata/releases.json")
+				content, err := os.ReadFile("../../test/releases.json")
 				if err != nil {
 					return nil, err
 				}
@@ -192,7 +192,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 				return &s3.HeadObjectOutput{}, nil
 			},
 			func(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error) {
-				content, err := os.ReadFile("../../testdata/releases.json")
+				content, err := os.ReadFile("../../test/releases.json")
 				if err != nil {
 					return nil, err
 				}
@@ -243,7 +243,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 				return &s3.HeadObjectOutput{}, nil
 			},
 			func(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error) {
-				content, err := os.ReadFile("../../testdata/releases.json")
+				content, err := os.ReadFile("../../test/releases.json")
 				if err != nil {
 					return nil, err
 				}
@@ -271,7 +271,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 				return nil, &types.NoSuchKey{}
 			},
 			func(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error) {
-				content, err := os.ReadFile("../../testdata/releases.json")
+				content, err := os.ReadFile("../../test/releases.json")
 				if err != nil {
 					return nil, err
 				}
@@ -299,7 +299,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 				return nil, &types.NoSuchKey{}
 			},
 			func(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error) {
-				content, err := os.ReadFile("../../testdata/releases.json")
+				content, err := os.ReadFile("../../test/releases.json")
 				if err != nil {
 					return nil, err
 				}

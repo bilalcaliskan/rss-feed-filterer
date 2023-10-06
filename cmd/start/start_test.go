@@ -1,35 +1,39 @@
-package feed
+package start
 
 import (
 	"context"
+	"errors"
 	"io"
 	"os"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/aws/aws-sdk-go-v2/service/s3/types"
+	"github.com/bilalcaliskan/rss-feed-filterer/cmd/root/options"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/config"
+	"github.com/bilalcaliskan/rss-feed-filterer/internal/logging"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/storage/aws"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestFilter(t *testing.T) {
+var mu sync.Mutex
+
+func TestExecuteStartCmd(t *testing.T) {
 	cases := []struct {
 		caseName       string
-		shouldPass     bool
-		configPath     string
+		args           []string
 		headBucketFunc func(ctx context.Context, params *s3.HeadBucketInput, optFns ...func(*s3.Options)) (*s3.HeadBucketOutput, error)
 		headObjectFunc func(ctx context.Context, params *s3.HeadObjectInput, optFns ...func(*s3.Options)) (*s3.HeadObjectOutput, error)
 		getObjectFunc  func(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error)
 		putObjectFunc  func(ctx context.Context, params *s3.PutObjectInput, optFns ...func(*s3.Options)) (*s3.PutObjectOutput, error)
+		shouldPass     bool
 	}{
 		{
 			"Success",
-			true,
-			"../../test/config.yaml",
+			[]string{},
 			func(ctx context.Context, params *s3.HeadBucketInput, optFns ...func(*s3.Options)) (*s3.HeadBucketOutput, error) {
 				return &s3.HeadBucketOutput{}, nil
 			},
@@ -47,49 +51,62 @@ func TestFilter(t *testing.T) {
 			func(ctx context.Context, params *s3.PutObjectInput, optFns ...func(*s3.Options)) (*s3.PutObjectOutput, error) {
 				return &s3.PutObjectOutput{}, nil
 			},
-		},
-		{
-			"Failure caused by bucket does not exists",
-			false,
-			"../../test/config.yaml",
-			func(ctx context.Context, params *s3.HeadBucketInput, optFns ...func(*s3.Options)) (*s3.HeadBucketOutput, error) {
-				return nil, &types.NoSuchBucket{}
-			},
-			nil,
-			nil,
-			nil,
-		},
-		{
-			"Failure caused by invalid project name",
 			true,
-			"../../test/invalid_config.yaml",
+		},
+		{
+			"Failure caused by injected error",
+			[]string{},
 			func(ctx context.Context, params *s3.HeadBucketInput, optFns ...func(*s3.Options)) (*s3.HeadBucketOutput, error) {
-				return &s3.HeadBucketOutput{}, nil
+				return nil, errors.New("injected error")
 			},
-			nil,
-			nil,
-			nil,
+			func(ctx context.Context, params *s3.HeadObjectInput, optFns ...func(*s3.Options)) (*s3.HeadObjectOutput, error) {
+				return &s3.HeadObjectOutput{}, nil
+			},
+			func(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error) {
+				content, err := os.ReadFile("../../test/releases.json")
+				if err != nil {
+					return nil, err
+				}
+
+				return &s3.GetObjectOutput{Body: io.NopCloser(strings.NewReader(string(content)))}, nil
+			},
+			func(ctx context.Context, params *s3.PutObjectInput, optFns ...func(*s3.Options)) (*s3.PutObjectOutput, error) {
+				return &s3.PutObjectOutput{}, nil
+			},
+			false,
 		},
 	}
 
 	for _, tc := range cases {
-		t.Logf("starting case %s", tc.caseName)
+		t.Logf("starting case %s\n", tc.caseName)
+		StartCmd.SetContext(context.Background())
+
+		conf, err := config.ReadConfig("../../test/config.yaml")
+		assert.Nil(t, err)
+		assert.NotNil(t, conf)
+
 		mockS3 := new(aws.MockS3Client)
 		mockS3.HeadBucketAPI = tc.headBucketFunc
 		mockS3.HeadObjectAPI = tc.headObjectFunc
 		mockS3.GetObjectAPI = tc.getObjectFunc
 		mockS3.PutObjectAPI = tc.putObjectFunc
 
-		cfg, err := config.ReadConfig(tc.configPath)
-		assert.Nil(t, err)
-		assert.NotNil(t, cfg)
+		announcer := &announce.NoopAnnouncer{}
+		logger := logging.GetLogger()
 
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel()
-		// In a real test, you might want to cancel the context after some time
-		// to simulate the completion of all goroutines.
+		StartCmd.SetContext(context.WithValue(StartCmd.Context(), options.ConfigKey{}, conf))
+		StartCmd.SetContext(context.WithValue(StartCmd.Context(), options.S3ClientKey{}, mockS3))
+		StartCmd.SetContext(context.WithValue(StartCmd.Context(), options.AnnouncerKey{}, announcer))
+		StartCmd.SetContext(context.WithValue(StartCmd.Context(), options.LoggerKey{}, logger))
 
-		err = Filter(ctx, cfg, mockS3, &announce.NoopAnnouncer{})
+		go func() {
+			time.Sleep(10 * time.Second)
+			mu.Lock()
+			cancel()
+			mu.Unlock()
+		}()
+
+		err = StartCmd.Execute()
 		if tc.shouldPass {
 			assert.Nil(t, err)
 		} else {
