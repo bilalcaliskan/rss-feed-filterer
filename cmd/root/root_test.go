@@ -4,6 +4,7 @@ package root
 
 import (
 	"testing"
+	"time"
 
 	"github.com/bilalcaliskan/rss-feed-filterer/cmd/root/options"
 	"github.com/stretchr/testify/assert"
@@ -47,6 +48,8 @@ func TestExecute(t *testing.T) {
 			assert.NotNil(t, err)
 			continue
 		}
+
+		time.Sleep(10 * time.Second)
 
 		assert.Nil(t, err)
 
