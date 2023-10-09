@@ -30,7 +30,7 @@ repos:
       # - id: go-unit-tests
       - id: go-build
   - repo: https://github.com/bilalcaliskan/pre-commit-golang
-    rev: v1.0.1
+    rev: v1.0.2
     hooks:
       - id: vendor
       - id: tidy
