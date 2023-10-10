@@ -8,6 +8,7 @@
 ![Coverage](https://sonarcloud.io/api/project_badges/measure?project=bilalcaliskan_rss-feed-filterer&metric=coverage)
 ![Release](https://img.shields.io/github/release/bilalcaliskan/rss-feed-filterer.svg)
 ![Go version](https://img.shields.io/github/go-mod/go-version/bilalcaliskan/rss-feed-filterer)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 
 RSS Feed Filterer is a sophisticated tool designed to efficiently monitor, filter, and notify users about new releases in software projects based on their RSS feeds. It seamlessly integrates with AWS S3 to persist release data and provides a comprehensive mechanism to track multiple project releases.
