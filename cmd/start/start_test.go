@@ -94,7 +94,7 @@ func TestExecuteStartCmd(t *testing.T) {
 		announcer := &announce.NoopAnnouncer{}
 		logger := logging.GetLogger()
 
-		StartCmd.SetContext(context.WithValue(StartCmd.Context(), options.ConfigKey{}, conf))
+		StartCmd.SetContext(context.WithValue(StartCmd.Context(), options.ConfigKey{}, *conf))
 		StartCmd.SetContext(context.WithValue(StartCmd.Context(), options.S3ClientKey{}, mockS3))
 		StartCmd.SetContext(context.WithValue(StartCmd.Context(), options.AnnouncerKey{}, announcer))
 		StartCmd.SetContext(context.WithValue(StartCmd.Context(), options.LoggerKey{}, logger))

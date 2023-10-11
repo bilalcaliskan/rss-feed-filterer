@@ -89,7 +89,7 @@ func TestFilter(t *testing.T) {
 		// In a real test, you might want to cancel the context after some time
 		// to simulate the completion of all goroutines.
 
-		err = Filter(ctx, cfg, mockS3, &announce.NoopAnnouncer{})
+		err = Filter(ctx, *cfg, mockS3, &announce.NoopAnnouncer{})
 		if tc.shouldPass {
 			assert.Nil(t, err)
 		} else {

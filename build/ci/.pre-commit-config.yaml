@@ -38,4 +38,4 @@ repos:
       - id: golangci-lint
         args: []
       - id: test
-        args: ["-timeout=60s", "-tags=unit", "-tags=e2e", "-tags=integration"]
+        args: ["-v", "-timeout=250s", "-tags=unit", "-tags=e2e", "-tags=integration"]

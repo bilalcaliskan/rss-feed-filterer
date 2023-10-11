@@ -62,32 +62,6 @@ func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, sem chan struc
 
 func (r *ReleaseChecker) fetchFeed(projectName string) (*gofeed.Feed, error) {
 	r.logger.Info().Str("projectName", projectName).Msg("trying to fetch the feed")
-
-	//file, err := os.Open("test/releases.atom")
-	//if err != nil {
-	//	r.logger.Warn().Str("error", err.Error()).Msg("Error opening file")
-	//	return nil, err
-	//}
-	//
-	//defer func() {
-	//	if err := file.Close(); err != nil {
-	//		panic(err)
-	//	}
-	//}()
-	//
-	//feed, err := r.Parse(file)
-	//if err != nil {
-	//	r.logger.Warn().
-	//		Str("error", err.Error()).
-	//		Msg("an error occurred while parsing feed, retrying...")
-	//	return nil, err
-	//}
-
-	//feed, err := r.ParseURL(fmt.Sprintf("%s/releases.atom", r.Url))
-	//if err != nil {
-	//	return nil, err
-	//}
-
 	return r.ParseURL(fmt.Sprintf("%s/releases.atom", r.Url))
 }
 
