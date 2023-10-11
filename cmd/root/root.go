@@ -45,6 +45,7 @@ mechanism to track multiple project releases.`,
 			if opts.VerboseLog {
 				fmt.Println("enabled")
 				logging.EnableDebugLogging()
+				fmt.Println("dummy")
 			}
 
 			cfg, err := config.ReadConfig(opts.ConfigFilePath)
