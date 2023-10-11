@@ -16,8 +16,8 @@ RSS Feed Filterer is a sophisticated tool designed to efficiently monitor, filte
 ## Features
 
 - **RSS Feed Monitoring**: Efficiently checks and parses RSS feeds for software releases.
-- **Notifications**: Notifies users about the latest releases. Only supports Slack notification but the architecture is designed to easily accommodate other notification services.
-- **Cloud Integration**: While AWS S3 is natively supported for persistent release data storage, the architecture is designed to easily accommodate other cloud providers' S3 services in upcoming releases. (Aliyun, GCP)
+- **Notifications**: Notifies users about the latest releases. Only supports Slack notification but the architecture is designed to easily accommodate other notification services like email.
+- **Cloud Integration**: While **AWS S3** is natively supported for persistent release data storage, the architecture is designed to easily accommodate other cloud providers' S3 services in upcoming releases. (Aliyun, GCP)
 
 ## Configuration
 ```shell
