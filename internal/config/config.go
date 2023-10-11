@@ -7,21 +7,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-//var (
-//	config Config
-//	err    error
-//)
-//
-//func init() {
-//	if config, err = ReadConfig(); err != nil {
-//		panic(err)
-//	}
-//}
-//
-//func GetConfig() Config {
-//	return config
-//}
-
 func ReadConfig(path string) (conf *Config, err error) {
 	file, err := os.ReadFile(path)
 	if err != nil {
