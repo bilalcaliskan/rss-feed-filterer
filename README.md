@@ -30,19 +30,10 @@ You can use [sample deployment file](deployments/sample_deployment.yaml) to depl
 ### Binary
 Binary can be downloaded from [Releases](https://github.com/bilalcaliskan/rss-feed-filterer/releases) page.
 
-### Homebrew
-This project can also be installed with [Homebrew](https://brew.sh/):
-```shell
-$ brew tap bilalcaliskan/tap
-$ brew install bilalcaliskan/tap/rss-feed-filterer
-```
-
 ## Development
 This project requires below tools while developing:
 - [Golang 1.20](https://golang.org/doc/go1.20)
 - [pre-commit](https://pre-commit.com/)
-- [golangci-lint](https://golangci-lint.run/usage/install/) - required by [pre-commit](https://pre-commit.com/)
-- [gocyclo](https://github.com/fzipp/gocyclo) - required by [pre-commit](https://pre-commit.com/)
 
 After you installed [pre-commit](https://pre-commit.com/) and the rest, simply run below command to prepare your
 development environment:
