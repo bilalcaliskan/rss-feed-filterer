@@ -59,12 +59,11 @@ jobs:
         uses: github/codeql-action/analyze@v2
 
   tests:
-    #    strategy:
-    #      matrix:
-    #        name: [unit, e2e]
+    strategy:
+      matrix:
+        name: [unit, e2e]
     runs-on: ubuntu-latest
-    #    name: test (${{ matrix.name }})
-    name: test
+    name: test (${{ matrix.name }})
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -73,10 +72,8 @@ jobs:
         with:
           go-version-file: "go.mod"
           cache: true
-      #      - name: Run ${{ matrix.name }} tests
-      #        run: make -s test-${{ matrix.name }}
-      - name: Run tests
-        run: make -s test
+      - name: Run ${{ matrix.name }} tests
+        run: make -s test-${{ matrix.name }}
 
   sonarcloud:
     runs-on: ubuntu-latest
@@ -99,11 +96,11 @@ jobs:
         with:
           args: >
             -Dproject.settings=build/ci/sonar-project.properties
-#      - name: SonarQube Quality Gate check
-#        uses: sonarsource/sonarqube-quality-gate-action@master
-#        timeout-minutes: 5
-#        env:
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: SonarQube Quality Gate check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build:
     runs-on: ubuntu-latest
