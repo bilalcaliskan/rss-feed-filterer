@@ -22,7 +22,7 @@ const (
 // create a channel to act as a semaphore
 var sem = make(chan struct{}, 5) // allow up to 5 concurrent access
 
-func Filter(ctx context.Context, cfg config.Config, client aws.S3ClientAPI, announcer announce.Announcer) error {
+func Filter(ctx context.Context, cfg *config.Config, client aws.S3ClientAPI, announcer announce.Announcer) error {
 	logger := logging.GetLogger()
 
 	if !aws.IsBucketExists(client, cfg.BucketName) {

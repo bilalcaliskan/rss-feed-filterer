@@ -19,6 +19,7 @@ import (
 
 type Parser interface {
 	ParseURL(url string) (*gofeed.Feed, error)
+	//Parse(r io.Reader) (*gofeed.Feed, error)
 }
 
 type ReleaseChecker struct {
@@ -62,6 +63,14 @@ func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, sem chan struc
 
 func (r *ReleaseChecker) fetchFeed(projectName string) (*gofeed.Feed, error) {
 	r.logger.Info().Str("projectName", projectName).Msg("trying to fetch the feed")
+	// Open the file
+	//file, err := os.Open("test/releases.atom")
+	//if err != nil {
+	//	panic(err)
+	//}
+	//defer file.Close()
+	//
+	//return r.Parse(file)
 	return r.ParseURL(fmt.Sprintf("%s/releases.atom", r.Url))
 }
 
