@@ -28,7 +28,7 @@ var (
 s3-manager clean --min-size-mb=1 --max-size-mb=1000 --keep-last-n-files=2 --sort-by=lastModificationDate --order=ascending
 		`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			cfg := cmd.Context().Value(options.ConfigKey{}).(config.Config)
+			cfg := cmd.Context().Value(options.ConfigKey{}).(*config.Config)
 			client := cmd.Context().Value(options.S3ClientKey{}).(aws.S3ClientAPI)
 			announcer := cmd.Context().Value(options.AnnouncerKey{}).(announce.Announcer)
 			logger := cmd.Context().Value(options.LoggerKey{}).(zerolog.Logger)
