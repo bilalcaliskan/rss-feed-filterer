@@ -44,9 +44,6 @@ func (m *mockSlackAPI) PostWebhook(url string, msg *api.WebhookMessage) error {
 }
 
 func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
-	// create a channel to act as a semaphore
-	var sem = make(chan struct{}, 5)
-
 	cases := []struct {
 		caseName             string
 		cfg                  config.Repository
@@ -324,9 +321,9 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 	}
 
 	// fill the semaphore channel with empty objects
-	for i := 0; i < 5; i++ {
-		sem <- struct{}{}
-	}
+	//for i := 0; i < 5; i++ {
+	//	sem <- struct{}{}
+	//}
 
 	for _, tc := range cases {
 		t.Logf("starting case %s", tc.caseName)
@@ -369,7 +366,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 		assert.NotEqual(t, "", projectName)
 
 		// check the feed
-		rc.CheckGithubReleases(ctx, sem, projectName)
+		rc.CheckGithubReleases(ctx, projectName)
 	}
 }
 

@@ -5,19 +5,19 @@
 storage:
   s3:
     provider: aws
-#    accessKey: dsddsdssddsf
-#    secretKey: asdfasdfasdfasdf
-#    region: us-east-1
-#    bucketName: asdfasdfadsf
+    accessKey: dsddsdssddsf
+    secretKey: asdfasdfasdfasdf
+    region: us-east-1
+    bucketName: asdfasdfadsf
 repositories:
-  - name: user1/project1
-    description: sample description
-    url: "https://github.com/user1/project1"
-    checkIntervalMinutes: 1
-#  - name: terraform
+#  - name: user1/project1
 #    description: sample description
-#    url: "https://github.com/hashicorp/terraform"
-#    checkIntervalMinutes: 30
-#  - name: s3-manager
-#    url: "https://github.com/bilalcaliskan/s3-manager"
-#    checkIntervalMinutes: 30
+#    url: "https://github.com/user1/project1/"
+#    checkIntervalMinutes: 1
+  - name: terraform
+    description: sample description
+    url: "https://github.com/hashicorp/terraform"
+    checkIntervalMinutes: 30
+  - name: s3-manager
+    url: "https://github.com/bilalcaliskan/s3-manager"
+    checkIntervalMinutes: 30

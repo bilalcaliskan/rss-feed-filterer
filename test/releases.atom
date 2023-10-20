@@ -21,22 +21,22 @@
     </author>
     <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/in/15368?s=60&amp;v=4"/>
   </entry>
-<!--   <entry> -->
-<!--     <id>tag:github.com,2008:Repository/621493965/v1.0.1</id> -->
-<!--     <updated>2023-08-04T12:21:41Z</updated> -->
-<!--     <link rel="alternate" type="text/html" href="https://github.com/user1/project1/releases/tag/v1.0.1"/> -->
-<!--     <title>v1.0.1</title> -->
-<!--     <content type="html">&lt;h2&gt;Changelog&lt;/h2&gt; -->
-<!-- &lt;ul&gt; -->
-<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/e26e7500be76d9f68470d9a3a9ede73f934b3e51/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/e26e7500be76d9f68470d9a3a9ede73f934b3e51&quot;&gt;&lt;tt&gt;e26e750&lt;/tt&gt;&lt;/a&gt; build(deps): bump github.com/aws/aws-sdk-go from 1.44.300 to 1.44.306&lt;/li&gt; -->
-<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/b8d8d4cd3768c2682fcb22f994b373bfbb7df339/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/b8d8d4cd3768c2682fcb22f994b373bfbb7df339&quot;&gt;&lt;tt&gt;b8d8d4c&lt;/tt&gt;&lt;/a&gt; build(deps): bump github.com/aws/aws-sdk-go from 1.44.306 to 1.44.312&lt;/li&gt; -->
-<!-- &lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/b2f24b4c1b3d5abae08b319feec5e0b49c3601e0/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/b2f24b4c1b3d5abae08b319feec5e0b49c3601e0&quot;&gt;&lt;tt&gt;b2f24b4&lt;/tt&gt;&lt;/a&gt; build(deps): bump github.com/rs/zerolog from 1.29.1 to 1.30.0&lt;/li&gt; -->
-<!-- &lt;/ul&gt;</content> -->
-<!--     <author> -->
-<!--       <name>github-actions[bot]</name> -->
-<!--     </author> -->
-<!--     <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/in/15368?s=60&amp;v=4"/> -->
-<!--   </entry> -->
+  <entry>
+    <id>tag:github.com,2008:Repository/621493965/v1.0.1</id>
+    <updated>2023-08-04T12:21:41Z</updated>
+    <link rel="alternate" type="text/html" href="https://github.com/user1/project1/releases/tag/v1.0.1"/>
+    <title>v1.0.1</title>
+    <content type="html">&lt;h2&gt;Changelog&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/e26e7500be76d9f68470d9a3a9ede73f934b3e51/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/e26e7500be76d9f68470d9a3a9ede73f934b3e51&quot;&gt;&lt;tt&gt;e26e750&lt;/tt&gt;&lt;/a&gt; build(deps): bump github.com/aws/aws-sdk-go from 1.44.300 to 1.44.306&lt;/li&gt;
+&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/b8d8d4cd3768c2682fcb22f994b373bfbb7df339/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/b8d8d4cd3768c2682fcb22f994b373bfbb7df339&quot;&gt;&lt;tt&gt;b8d8d4c&lt;/tt&gt;&lt;/a&gt; build(deps): bump github.com/aws/aws-sdk-go from 1.44.306 to 1.44.312&lt;/li&gt;
+&lt;li&gt;&lt;a class=&quot;commit-link&quot; data-hovercard-type=&quot;commit&quot; data-hovercard-url=&quot;https://github.com/hashicorp/consul/commit/b2f24b4c1b3d5abae08b319feec5e0b49c3601e0/hovercard&quot; href=&quot;https://github.com/hashicorp/consul/commit/b2f24b4c1b3d5abae08b319feec5e0b49c3601e0&quot;&gt;&lt;tt&gt;b2f24b4&lt;/tt&gt;&lt;/a&gt; build(deps): bump github.com/rs/zerolog from 1.29.1 to 1.30.0&lt;/li&gt;
+&lt;/ul&gt;</content>
+    <author>
+      <name>github-actions[bot]</name>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/in/15368?s=60&amp;v=4"/>
+  </entry>
 <!--   <entry> -->
 <!--     <id>tag:github.com,2008:Repository/621493965/v1.0.2</id> -->
 <!--     <updated>2023-08-04T12:21:41Z</updated> -->
