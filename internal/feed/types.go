@@ -19,7 +19,6 @@ import (
 
 type Parser interface {
 	ParseURL(url string) (*gofeed.Feed, error)
-	//Parse(r io.Reader) (*gofeed.Feed, error)
 }
 
 type ReleaseChecker struct {
@@ -42,43 +41,31 @@ func NewReleaseChecker(client aws.S3ClientAPI, repo config.Repository, parser Pa
 	}
 }
 
-func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, sem chan struct{}, projectName string) {
+func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, projectName string) {
 	r.logger = r.logger.With().Str("projectName", projectName).Logger()
 
 	ticker := time.NewTicker(time.Duration(r.CheckIntervalMinutes) * time.Minute)
 	defer ticker.Stop()
 
 	// Run immediately since ticker does not run on first hit
-	r.checkFeed(sem, projectName, r.Repository)
+	r.checkFeed(projectName, r.Repository)
 
 	for {
 		select {
 		case <-ctx.Done():
 			return
 		case <-ticker.C:
-			r.checkFeed(sem, projectName, r.Repository)
+			r.checkFeed(projectName, r.Repository)
 		}
 	}
 }
 
 func (r *ReleaseChecker) fetchFeed(projectName string) (*gofeed.Feed, error) {
 	r.logger.Info().Str("projectName", projectName).Msg("trying to fetch the feed")
-	// Open the file
-	//file, err := os.Open("test/releases.atom")
-	//if err != nil {
-	//	panic(err)
-	//}
-	//defer file.Close()
-	//
-	//return r.Parse(file)
 	return r.ParseURL(fmt.Sprintf("%s/releases.atom", r.Url))
 }
 
-func (r *ReleaseChecker) checkFeed(sem chan struct{}, projectName string, repo config.Repository) {
-	//defer func() {
-	//	<-sem // release the semaphore
-	//}()
-
+func (r *ReleaseChecker) checkFeed(projectName string, repo config.Repository) {
 	for retries := 0; retries < maxRetries; retries++ {
 		feed, err := r.fetchFeed(projectName)
 		if err != nil {
@@ -189,7 +176,7 @@ func (r *ReleaseChecker) extractProjectName() (string, error) {
 
 	// TODO: what about other cases?
 	parts := strings.Split(u.Path, "/")
-	if len(parts) < 3 {
+	if len(parts) != 3 {
 		return "", fmt.Errorf("invalid github url format")
 	}
 
