@@ -1,7 +1,27 @@
-#announcer:
-#  slack:
-#    enabled: true
-#    webhookUrl: asdfasdfasdf
+announcer:
+  slack:
+    enabled: false
+    webhookUrl: asdfasdfasdf
+  email:
+    enabled: true
+    type: "ses"  # or "smtp", "custom", etc.
+    from: "info@giantrooster.tech"
+    to:
+      - "bilalcaliskan@protonmail.com"
+    cc:
+      - "jsagredo@protonmail.com"
+      - "jsagredo@protonmail.com"
+    bcc:
+      - "jsagredo@protonmail.com"
+    ses:
+      region: "us-east-1"
+      accessKey: "AKIA3BI3OPS2AH2DLQN6"
+      secretKey: "9I9Am88fwZ6k/iNhdRO3jVO/Q1awmternymeS4Yy"
+#    smtp:
+#      host: "smtp.example.com"
+#      port: 587
+#      username: "your_smtp_username"
+#      password: "your_smtp_password"
 storage:
   s3:
     provider: aws

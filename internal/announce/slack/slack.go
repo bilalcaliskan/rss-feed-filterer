@@ -27,6 +27,8 @@ type MockSlackService struct {
 type SlackAnnouncer struct {
 	WebhookURL string
 	Enabled    bool
+	IconUrl    string
+	Username   string
 	Service    SlackAPI
 }
 

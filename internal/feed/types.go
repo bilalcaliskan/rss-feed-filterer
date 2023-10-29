@@ -8,8 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce/slack"
+
+	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/config"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/storage/aws"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/types"
@@ -27,17 +28,17 @@ type ReleaseChecker struct {
 	Parser
 	logger zerolog.Logger
 	config.Repository
-	announce.Announcer
+	announcers []announce.Announcer
 }
 
-func NewReleaseChecker(client aws.S3ClientAPI, repo config.Repository, parser Parser, bucketName string, logger zerolog.Logger, announcer announce.Announcer) *ReleaseChecker {
+func NewReleaseChecker(client aws.S3ClientAPI, repo config.Repository, parser Parser, bucketName string, logger zerolog.Logger, announcers []announce.Announcer) *ReleaseChecker {
 	return &ReleaseChecker{
 		S3ClientAPI: client,
 		bucketName:  bucketName,
 		Parser:      parser,
 		logger:      logger,
 		Repository:  repo,
-		Announcer:   announcer,
+		announcers:  announcers,
 	}
 }
 
@@ -119,11 +120,22 @@ func (r *ReleaseChecker) checkFeed(projectName string, repo config.Repository) {
 }
 
 func (r *ReleaseChecker) sendNotification(releases []types.Release) {
-	if !r.Announcer.IsEnabled() {
+	if len(r.announcers) == 0 {
 		return
 	}
 
+	//if !r.Announcer.IsEnabled() {
+	//	return
+	//}
+
 	for _, v := range releases {
+		for _, a := range r.announcers {
+			announcer, ok := a.(*EmailPayload)
+			if !ok {
+				return fmt.Errorf("invalid payload type, expected EmailPayload")
+			}
+		}
+
 		if err := r.Announcer.Notify(slack.SlackPayload{
 			ProjectName: v.ProjectName,
 			Version:     v.Version,
