@@ -3,6 +3,7 @@ announcer:
     enabled: false
     webhookUrl: asdfasdfasdf
   email:
+    provider: "aws"
     enabled: true
     type: "ses"  # or "smtp", "custom", etc.
     from: "info@giantrooster.tech"
@@ -14,17 +15,18 @@ announcer:
     bcc:
       - "jsagredo@protonmail.com"
     ses:
-      region: "us-east-1"
-      accessKey: "AKIA3BI3OPS2AH2DLQN6"
-      secretKey: "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"
+#      region: "us-east-1"
+#      accessKey: "AKIA3BI3OPS2D5SV2MAX"
+#      secretKey: "H2p4uyk6MYTKRDcolW4oOsE9nO02TFpDSARsgouK"
 #    smtp:
 #      host: "smtp.example.com"
 #      port: 587
 #      username: "your_smtp_username"
 #      password: "your_smtp_password"
 storage:
+  provider: "aws"
   s3:
-    provider: aws
+#    provider: aws
     accessKey: dsddsdssddsf
     secretKey: asdfasdfasdfasdf
     region: us-east-1

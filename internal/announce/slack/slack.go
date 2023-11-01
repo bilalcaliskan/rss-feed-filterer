@@ -32,13 +32,13 @@ type SlackAnnouncer struct {
 	Service    SlackAPI
 }
 
-type SlackPayload struct {
-	ProjectName string
-	Version     string
-	URL         string
-	IconUrl     string
-	Username    string
-}
+//type SlackPayload struct {
+//	ProjectName string
+//	Version     string
+//	URL         string
+//	IconUrl     string
+//	Username    string
+//}
 
 func NewSlackAnnouncer(url string, enabled bool, service SlackAPI) *SlackAnnouncer {
 	return &SlackAnnouncer{
@@ -49,16 +49,16 @@ func NewSlackAnnouncer(url string, enabled bool, service SlackAPI) *SlackAnnounc
 }
 
 func (sa *SlackAnnouncer) Notify(payload announce.AnnouncerPayload) error {
-	slackPayload, ok := payload.(SlackPayload)
-	if !ok {
-		return fmt.Errorf("invalid payload type for SlackAnnouncer")
-	}
+	//slackPayload, ok := payload.(SlackPayload)
+	//if !ok {
+	//	return fmt.Errorf("invalid payload type for SlackAnnouncer")
+	//}
 
 	msg := api.WebhookMessage{
 		Attachments: []api.Attachment{},
-		Username:    slackPayload.Username,
-		IconURL:     slackPayload.IconUrl,
-		Text:        fmt.Sprintf("%s %s is out! Check it out at %s", slackPayload.ProjectName, slackPayload.Version, slackPayload.URL),
+		Username:    sa.Username,
+		IconURL:     sa.IconUrl,
+		Text:        fmt.Sprintf("%s %s is out! Check it out at %s", payload.ProjectName, payload.Version, payload.URL),
 	}
 
 	return sa.Service.PostWebhook(sa.WebhookURL, &msg)

@@ -83,9 +83,10 @@ mechanism to track multiple project releases.`,
 				if cfg.Announcer.Email.Type == "ses" {
 					sesClient := ses.NewFromConfig(awsCfg)
 					sender = internalses.NewSESSender(sesClient)
-				} else if cfg.Announcer.Email.Type == "smtp" {
-					// TODO: implement smtp announcer
 				}
+				//} else if cfg.Announcer.Email.Type == "smtp" {
+				//	// TODO: implement smtp announcer
+				//}
 
 				announcer := email.NewEmailAnnouncer(sender, cfg.Announcer.Email.From, cfg.Announcer.Email.To, cfg.Announcer.Email.Cc, cfg.Announcer.Email.Bcc)
 				announcers = append(announcers, announcer)

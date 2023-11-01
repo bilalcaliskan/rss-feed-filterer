@@ -2,6 +2,7 @@ package ses
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/service/ses"
 	"github.com/aws/aws-sdk-go-v2/service/ses/types"
@@ -17,7 +18,10 @@ func NewSESSender(client *ses.Client) *SESSender {
 	}
 }
 
-func (s *SESSender) Send(to, cc, bcc []string, from, subject, content string) error {
+func (s *SESSender) Send(to, cc, bcc []string, from, projectName, version, url string) error {
+	content := fmt.Sprintf("%s %s is out! Check it out at %s", projectName, version, url)
+	subject := fmt.Sprintf("New release alert for project %s!", projectName)
+
 	input := &ses.SendEmailInput{
 		Destination: &types.Destination{
 			ToAddresses:  to,

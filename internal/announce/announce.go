@@ -5,7 +5,11 @@ type Announcer interface {
 	IsEnabled() bool
 }
 
-type AnnouncerPayload interface{}
+type AnnouncerPayload struct {
+	ProjectName string
+	Version     string
+	URL         string
+}
 
 type NoopAnnouncer struct{}
 

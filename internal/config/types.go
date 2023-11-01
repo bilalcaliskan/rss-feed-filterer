@@ -1,6 +1,8 @@
 package config
 
 import (
+	"fmt"
+
 	"github.com/spf13/viper"
 )
 
@@ -25,14 +27,15 @@ type Announcer struct {
 }
 
 type Email struct {
-	Enabled bool     `yaml:"enabled"`
-	From    string   `yaml:"from"`
-	To      []string `yaml:"to"`
-	Type    string   `yaml:"type"`
-	Cc      []string `yaml:"cc"`
-	Bcc     []string `yaml:"bcc"`
-	Ses     `yaml:"ses"`
-	Smtp    `yaml:"smtp"`
+	Provider string   `yaml:"provider"`
+	Enabled  bool     `yaml:"enabled"`
+	From     string   `yaml:"from"`
+	To       []string `yaml:"to"`
+	Type     string   `yaml:"type"`
+	Cc       []string `yaml:"cc"`
+	Bcc      []string `yaml:"bcc"`
+	Ses      `yaml:"ses"`
+	Smtp     `yaml:"smtp"`
 }
 
 type Ses struct {
@@ -54,20 +57,21 @@ type Slack struct {
 }
 
 type Storage struct {
-	S3 `yaml:"s3"`
+	Provider string `yaml:"provider"`
+	S3       `yaml:"s3"`
 }
 
 type S3 struct {
-	Provider   string `yaml:"provider"`
+	//Provider   string `yaml:"provider"`
 	AccessKey  string `yaml:"accessKey"`
 	SecretKey  string `yaml:"secretKey"`
 	Region     string `yaml:"region"`
 	BucketName string `yaml:"bucketName"`
 }
 
-func (s *Storage) SetAccessCredentialsFromEnv() error {
+func (s *Storage) SetAccessCredentialsFromEnv(provider string) error {
 	viper.AutomaticEnv()
-	viper.SetEnvPrefix("storage_aws")
+	viper.SetEnvPrefix(fmt.Sprintf("storage_%s", provider))
 	if err := viper.BindEnv("access_key", "secret_key", "bucket_name", "region"); err != nil {
 		return err
 	}
@@ -88,9 +92,9 @@ func (s *Storage) SetAccessCredentialsFromEnv() error {
 	return nil
 }
 
-func (s *Ses) SetAccessCredentialsFromEnv() error {
+func (s *Ses) SetAccessCredentialsFromEnv(provider string) error {
 	viper.AutomaticEnv()
-	viper.SetEnvPrefix("email_aws")
+	viper.SetEnvPrefix(fmt.Sprintf("email_%s", provider))
 	if err := viper.BindEnv("access_key", "secret_key", "region"); err != nil {
 		return err
 	}

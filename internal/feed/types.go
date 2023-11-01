@@ -8,8 +8,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce/slack"
-
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/config"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/storage/aws"
@@ -61,8 +59,35 @@ func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, projectName st
 	}
 }
 
+// open file and read the content as string
+//func (r *ReleaseChecker) readFeed(projectName string) (*gofeed.Feed, error) {
+//	r.logger.Info().Str("projectName", projectName).Msg("trying to read the feed")
+//
+//	f, err := os.Open(fmt.Sprintf("%s/%s", r.FeedPath, projectName))
+//	if err != nil {
+//		return nil, err
+//	}
+//	defer f.Close()
+//
+//	content, err := ioutil.ReadAll(f)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	return r.ParseString(string(content))
+
 func (r *ReleaseChecker) fetchFeed(projectName string) (*gofeed.Feed, error) {
 	r.logger.Info().Str("projectName", projectName).Msg("trying to fetch the feed")
+
+	// this block is for testing purposes
+	/*content, err := ioutil.ReadFile("test/releases.atom")
+	if err != nil {
+		log.Fatal(err)
+	}
+	text := string(content)
+	return gofeed.NewParser().ParseString(text)*/
+
+	// this block is for production that gets the feed from url defined in config file
 	return r.ParseURL(fmt.Sprintf("%s/releases.atom", r.Url))
 }
 
@@ -113,8 +138,6 @@ func (r *ReleaseChecker) checkFeed(projectName string, repo config.Repository) {
 
 		r.logger.Info().Int("count", len(allReleases)).Msg("successfully put all releases into bucket")
 
-		// TODO: ensure project name does not end with /
-
 		break
 	}
 }
@@ -124,30 +147,19 @@ func (r *ReleaseChecker) sendNotification(releases []types.Release) {
 		return
 	}
 
-	//if !r.Announcer.IsEnabled() {
-	//	return
-	//}
-
 	for _, v := range releases {
 		for _, a := range r.announcers {
-			announcer, ok := a.(*EmailPayload)
-			if !ok {
-				return fmt.Errorf("invalid payload type, expected EmailPayload")
+			if err := a.Notify(announce.AnnouncerPayload{
+				ProjectName: v.ProjectName,
+				Version:     v.Version,
+				URL:         v.Url,
+			}); err != nil {
+				r.logger.Warn().Err(err).Msg("an error occurred while sending announce, skipping")
+				continue
 			}
-		}
 
-		if err := r.Announcer.Notify(slack.SlackPayload{
-			ProjectName: v.ProjectName,
-			Version:     v.Version,
-			URL:         v.Url,
-			IconUrl:     "https://github.com/goreleaser/goreleaser/raw/939f2b002b29d2c8df6efd2d1f1d0b85c4ac5ee0/www/docs/static/logo.png",
-			Username:    "GoReleaser",
-		}); err != nil {
-			r.logger.Warn().Err(err).Msg("an error occurred while sending announce, skipping")
-			continue
+			r.logger.Info().Str("version", v.Version).Msg("successfully sent announce")
 		}
-
-		r.logger.Info().Str("version", v.Version).Msg("successfully sent announce")
 	}
 }
 

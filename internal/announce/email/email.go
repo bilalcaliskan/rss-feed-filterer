@@ -1,8 +1,6 @@
 package email
 
 import (
-	"fmt"
-
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce"
 )
 
@@ -22,7 +20,7 @@ type EmailAnnouncer struct {
 // Sender interface ensures that any specific email service (like SMTP, SES, etc.)
 // can be integrated into the EmailAnnouncer.
 type Sender interface {
-	Send(to, cc, bcc []string, from, subject, content string) error
+	Send(to, cc, bcc []string, from, projectName, version, url string) error
 }
 
 func NewEmailAnnouncer(sender Sender, from string, to, cc, bcc []string) *EmailAnnouncer {
@@ -36,12 +34,12 @@ func NewEmailAnnouncer(sender Sender, from string, to, cc, bcc []string) *EmailA
 }
 
 func (e *EmailAnnouncer) Notify(payload announce.AnnouncerPayload) error {
-	emailPayload, ok := payload.(*EmailPayload)
-	if !ok {
-		return fmt.Errorf("invalid payload type, expected EmailPayload")
-	}
+	//emailPayload, ok := payload.(*EmailPayload)
+	//if !ok {
+	//	return fmt.Errorf("invalid payload type, expected EmailPayload")
+	//}
 
-	return e.Send(e.To, e.Cc, e.Bcc, e.From, emailPayload.Subject, emailPayload.Content)
+	return e.Send(e.To, e.Cc, e.Bcc, e.From, payload.ProjectName, payload.Version, payload.URL)
 }
 
 func (e *EmailAnnouncer) IsEnabled() bool {
