@@ -65,9 +65,8 @@ mechanism to track multiple project releases.`,
 			}
 
 			var announcers []announce.Announcer
-
 			if cfg.Announcer.Slack.Enabled {
-				announcer := slack.NewSlackAnnouncer(cfg.Announcer.Slack.WebhookUrl, true, &slack.SlackService{})
+				announcer := slack.NewSlackAnnouncer(cfg.Announcer.Slack.WebhookUrl, cfg.Announcer.Slack.Username, cfg.Announcer.Slack.IconUrl, &slack.SlackService{})
 				announcers = append(announcers, announcer)
 			}
 

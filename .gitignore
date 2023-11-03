@@ -19,3 +19,4 @@ cover.html
 *.out
 .bin/
 venv
+configs/sample_valid_config.yaml

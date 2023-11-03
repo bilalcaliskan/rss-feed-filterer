@@ -33,7 +33,7 @@ func NewEmailAnnouncer(sender Sender, from string, to, cc, bcc []string) *EmailA
 	}
 }
 
-func (e *EmailAnnouncer) Notify(payload announce.AnnouncerPayload) error {
+func (e *EmailAnnouncer) Notify(payload *announce.AnnouncerPayload) error {
 	//emailPayload, ok := payload.(*EmailPayload)
 	//if !ok {
 	//	return fmt.Errorf("invalid payload type, expected EmailPayload")

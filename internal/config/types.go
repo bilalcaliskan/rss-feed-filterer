@@ -54,6 +54,8 @@ type Smtp struct {
 type Slack struct {
 	Enabled    bool   `yaml:"enabled"`
 	WebhookUrl string `yaml:"webhookUrl"`
+	Username   string `yaml:"username"`
+	IconUrl    string `yaml:"iconUrl"`
 }
 
 type Storage struct {

@@ -2,22 +2,24 @@ announcer:
   slack:
     enabled: false
     webhookUrl: asdfasdfasdf
+    username: "giantrooster"
+    iconUrl: "https://avatars.slack-edge.com/2018-03-07/324429893748_0b9b9b9b9b9b9b9b9b9b_512.png"
   email:
     provider: "aws"
     enabled: true
     type: "ses"  # or "smtp", "custom", etc.
-    from: "info@giantrooster.tech"
+    from: "foo@example.com"
     to:
-      - "bilalcaliskan@protonmail.com"
+      - "foo2@example.com"
     cc:
-      - "jsagredo@protonmail.com"
-      - "jsagredo@protonmail.com"
+      - "foo3@example.com"
+      - "foo4@example.com"
     bcc:
-      - "jsagredo@protonmail.com"
+      - "foo5@example.com"
     ses:
-#      region: "us-east-1"
-#      accessKey: "AKIA3BI3OPS2D5SV2MAX"
-#      secretKey: "H2p4uyk6MYTKRDcolW4oOsE9nO02TFpDSARsgouK"
+#      region: "your_region"
+#      accessKey: "your_access_key"
+#      secretKey: "your_secret_key"
 #    smtp:
 #      host: "smtp.example.com"
 #      port: 587

@@ -6,6 +6,8 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce"
+
 	api "github.com/slack-go/slack"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -22,48 +24,46 @@ func (m *MockSlackAPI) PostWebhook(url string, msg *api.WebhookMessage) error {
 
 func TestSlackAnnouncer_Notify(t *testing.T) {
 	mockSlackAPI := new(MockSlackAPI)
-	announcer := NewSlackAnnouncer("test-webhook-url", true, mockSlackAPI)
+	announcer := NewSlackAnnouncer("test-webhook-url", "foo", "bar", mockSlackAPI)
 
-	payload := SlackPayload{
+	payload := announce.AnnouncerPayload{
 		ProjectName: "Test Project",
 		Version:     "1.0.0",
 		URL:         "https://example.com",
-		IconUrl:     "https://icon.example.com",
-		Username:    "TestUser",
 	}
 
 	expectedMsg := &api.WebhookMessage{
 		Attachments: []api.Attachment{},
-		Username:    payload.Username,
-		IconURL:     payload.IconUrl,
+		Username:    announcer.Username,
+		IconURL:     announcer.IconUrl,
 		Text:        "Test Project 1.0.0 is out! Check it out at https://example.com",
 	}
 
 	testCases := []struct {
 		name        string
-		payload     interface{}
+		payload     *announce.AnnouncerPayload
 		setupMocks  func()
 		expectedErr error
 	}{
 		{
 			name:    "successful notification",
-			payload: payload,
+			payload: &payload,
 			setupMocks: func() {
 				mockSlackAPI.On("PostWebhook", "test-webhook-url", expectedMsg).Return(nil)
 			},
 			expectedErr: nil,
 		},
-		{
-			name:    "notification with wrong payload type",
-			payload: "wrong type",
-			setupMocks: func() {
-				// No mocks needed for this case
-			},
-			expectedErr: errors.New("invalid payload type for SlackAnnouncer"),
-		},
+		//{
+		//	name:    "notification with wrong payload type",
+		//	payload: nil,
+		//	setupMocks: func() {
+		//		// No mocks needed for this case
+		//	},
+		//	expectedErr: errors.New("invalid payload type for SlackAnnouncer"),
+		//},
 		{
 			name:    "slack API error",
-			payload: payload,
+			payload: &payload,
 			setupMocks: func() {
 				mockSlackAPI.On("PostWebhook", "test-webhook-url", expectedMsg).Return(errors.New("slack API error"))
 			},
@@ -86,7 +86,7 @@ func TestSlackAnnouncer_Notify(t *testing.T) {
 }
 
 func TestSlackAnnouncer_IsEnabled(t *testing.T) {
-	sa := NewSlackAnnouncer("asdlfkj", true, &SlackService{})
+	sa := NewSlackAnnouncer("asdlfkj", "foo", "bar", &SlackService{})
 	assert.True(t, sa.IsEnabled())
 }
 

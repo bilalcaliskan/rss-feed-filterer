@@ -47,7 +47,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 	cases := []struct {
 		caseName             string
 		cfg                  config.Repository
-		announcer            announce.Announcer
+		announcers           []announce.Announcer
 		announcerErr         error
 		ctxDuration          time.Duration
 		parserResponse       *gofeed.Feed
@@ -65,7 +65,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 				Url:                  "https://github.com/user1/project1",
 				CheckIntervalMinutes: 1,
 			},
-			&slack.SlackAnnouncer{},
+			[]announce.Announcer{&slack.SlackAnnouncer{}},
 			nil,
 			10 * time.Second,
 			&gofeed.Feed{
@@ -117,7 +117,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 				Url:                  "https://github.com/user1/project1",
 				CheckIntervalMinutes: 1,
 			},
-			&slack.SlackAnnouncer{},
+			[]announce.Announcer{&slack.SlackAnnouncer{}},
 			errors.New("injected error"),
 			10 * time.Second,
 			&gofeed.Feed{
@@ -169,7 +169,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 				Url:                  "https://github.com/user1/project1",
 				CheckIntervalMinutes: 1,
 			},
-			&announce.NoopAnnouncer{},
+			[]announce.Announcer{&announce.NoopAnnouncer{}},
 			nil,
 			65 * time.Second,
 			&gofeed.Feed{
@@ -215,7 +215,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 				Url:                  "https://github.com/user1/project1",
 				CheckIntervalMinutes: 1,
 			},
-			&announce.NoopAnnouncer{},
+			[]announce.Announcer{&announce.NoopAnnouncer{}},
 			nil,
 			10 * time.Second,
 			&gofeed.Feed{Title: "dummy"},
@@ -239,7 +239,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 				Url:                  "https://github.com/user1/project1",
 				CheckIntervalMinutes: 1,
 			},
-			&announce.NoopAnnouncer{},
+			[]announce.Announcer{&announce.NoopAnnouncer{}},
 			nil,
 			10 * time.Second,
 			nil,
@@ -268,7 +268,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 				Url:                  "https://github.com/user1/project1",
 				CheckIntervalMinutes: 1,
 			},
-			&announce.NoopAnnouncer{},
+			[]announce.Announcer{&announce.NoopAnnouncer{}},
 			nil,
 			10 * time.Second,
 			&gofeed.Feed{Title: "dummy"},
@@ -297,7 +297,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 				Url:                  "https://github.com/user1/project1",
 				CheckIntervalMinutes: 1,
 			},
-			&announce.NoopAnnouncer{},
+			[]announce.Announcer{&announce.NoopAnnouncer{}},
 			nil,
 			10 * time.Second,
 			&gofeed.Feed{Title: "dummy"},
@@ -337,15 +337,22 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 		// override the putObjectFunc with mock putObjectFunc
 		mockS3.PutObjectAPI = tc.putObjectFunc
 
+		var anns []announce.Announcer
+
 		// create a mock announcer
-		_, ok := tc.announcer.(*slack.SlackAnnouncer)
-		if ok {
-			// create a mock Slack API
-			mockSlackAPI := new(mockSlackAPI)
-			// override the PostWebhook with mock PostWebhook
-			mockSlackAPI.On("PostWebhook", mock.AnythingOfType("string"), mock.AnythingOfType("*slack.WebhookMessage")).Return(tc.announcerErr)
-			// override the announcer with mock announcer
-			tc.announcer = slack.NewSlackAnnouncer("test-webhook-url", true, mockSlackAPI)
+		for _, a := range tc.announcers {
+			_, ok := a.(*slack.SlackAnnouncer)
+			if ok {
+				// create a mock Slack API
+				mockSlackAPI := new(mockSlackAPI)
+				// override the PostWebhook with mock PostWebhook
+				mockSlackAPI.On("PostWebhook", mock.AnythingOfType("string"), mock.AnythingOfType("*slack.WebhookMessage")).Return(tc.announcerErr)
+				// override the announcer with mock announcer
+				anns = append(anns, slack.NewSlackAnnouncer("test-webhook-url", "foo", "aldskfadsfljk", mockSlackAPI))
+				continue
+			}
+
+			anns = append(anns, a)
 		}
 
 		// create a mock parser
@@ -354,7 +361,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 		parser.On("ParseURL", mock.AnythingOfType("string")).Return(tc.parserResponse, tc.parserErr)
 
 		// create a release checker
-		rc := NewReleaseChecker(mockS3, tc.cfg, parser, "thisisdummybucket", logging.GetLogger(), tc.announcer)
+		rc := NewReleaseChecker(mockS3, tc.cfg, parser, "thisisdummybucket", logging.GetLogger(), anns)
 
 		// create a context with timeout
 		ctx, cancel := context.WithTimeout(context.Background(), tc.ctxDuration)

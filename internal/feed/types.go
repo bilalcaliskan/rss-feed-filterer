@@ -149,7 +149,7 @@ func (r *ReleaseChecker) sendNotification(releases []types.Release) {
 
 	for _, v := range releases {
 		for _, a := range r.announcers {
-			if err := a.Notify(announce.AnnouncerPayload{
+			if err := a.Notify(&announce.AnnouncerPayload{
 				ProjectName: v.ProjectName,
 				Version:     v.Version,
 				URL:         v.Url,
