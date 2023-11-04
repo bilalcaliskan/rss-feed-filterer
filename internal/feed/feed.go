@@ -18,7 +18,7 @@ const (
 	releaseFileKey     = "releases.json"
 )
 
-func Filter(ctx context.Context, cfg *config.Config, client aws.S3ClientAPI, announcer announce.Announcer) error {
+func Filter(ctx context.Context, cfg *config.Config, client aws.S3ClientAPI, announcers []announce.Announcer) error {
 	logger := logging.GetLogger()
 
 	if !aws.IsBucketExists(client, cfg.BucketName) {
@@ -29,7 +29,7 @@ func Filter(ctx context.Context, cfg *config.Config, client aws.S3ClientAPI, ann
 
 	for _, repo := range cfg.Repositories {
 		go func(repo config.Repository) {
-			checker := NewReleaseChecker(client, repo, gofeed.NewParser(), cfg.BucketName, logging.GetLogger(), announcer)
+			checker := NewReleaseChecker(client, repo, gofeed.NewParser(), cfg.BucketName, logging.GetLogger(), announcers)
 
 			projectName, err := checker.extractProjectName()
 			if err != nil {

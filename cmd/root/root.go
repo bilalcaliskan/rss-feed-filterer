@@ -5,6 +5,10 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/aws/aws-sdk-go-v2/service/ses"
+	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce/email"
+	internalses "github.com/bilalcaliskan/rss-feed-filterer/internal/announce/email/ses"
+
 	"github.com/bilalcaliskan/rss-feed-filterer/cmd/root/options"
 	"github.com/bilalcaliskan/rss-feed-filterer/cmd/start"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce"
@@ -60,16 +64,40 @@ mechanism to track multiple project releases.`,
 				return err
 			}
 
-			var announcer announce.Announcer
+			var announcers []announce.Announcer
 			if cfg.Announcer.Slack.Enabled {
-				announcer = slack.NewSlackAnnouncer(cfg.Announcer.Slack.WebhookUrl, true, &slack.SlackService{})
-			} else {
-				announcer = &announce.NoopAnnouncer{}
+				announcer := slack.NewSlackAnnouncer(cfg.Announcer.Slack.WebhookUrl, cfg.Announcer.Slack.Username, cfg.Announcer.Slack.IconUrl, &slack.SlackService{})
+				announcers = append(announcers, announcer)
 			}
+
+			if cfg.Announcer.Email.Enabled {
+				var sender email.Sender
+
+				awsCfg, err := aws.CreateConfig(cfg.Email.AccessKey, cfg.Email.SecretKey, cfg.Email.Region)
+				if err != nil {
+					logger.Error().Err(err).Msg("failed to create aws config")
+					return err
+				}
+
+				if cfg.Announcer.Email.Type == "ses" {
+					sesClient := ses.NewFromConfig(awsCfg)
+					sender = internalses.NewSESSender(sesClient)
+				}
+				//} else if cfg.Announcer.Email.Type == "smtp" {
+				//	// TODO: implement smtp announcer
+				//}
+
+				announcer := email.NewEmailAnnouncer(sender, cfg.Announcer.Email.From, cfg.Announcer.Email.To, cfg.Announcer.Email.Cc, cfg.Announcer.Email.Bcc)
+				announcers = append(announcers, announcer)
+			}
+
+			//else if cfg.Announcer.Email.Enabled {
+			//	announcer = &announce.NoopAnnouncer{}
+			//}
 
 			cmd.SetContext(context.WithValue(cmd.Context(), options.ConfigKey{}, cfg))
 			cmd.SetContext(context.WithValue(cmd.Context(), options.S3ClientKey{}, client))
-			cmd.SetContext(context.WithValue(cmd.Context(), options.AnnouncerKey{}, announcer))
+			cmd.SetContext(context.WithValue(cmd.Context(), options.AnnouncerKey{}, announcers))
 			cmd.SetContext(context.WithValue(cmd.Context(), options.LoggerKey{}, logger))
 
 			return nil

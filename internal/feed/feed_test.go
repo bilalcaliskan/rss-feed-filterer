@@ -74,6 +74,9 @@ func TestFilter(t *testing.T) {
 		},
 	}
 
+	var announcers []announce.Announcer
+	announcers = append(announcers, &announce.NoopAnnouncer{})
+
 	for _, tc := range cases {
 		t.Logf("starting case %s", tc.caseName)
 		mockS3 := new(aws.MockS3Client)
@@ -91,7 +94,7 @@ func TestFilter(t *testing.T) {
 		// In a real test, you might want to cancel the context after some time
 		// to simulate the completion of all goroutines.
 
-		err = Filter(ctx, cfg, mockS3, &announce.NoopAnnouncer{})
+		err = Filter(ctx, cfg, mockS3, announcers)
 		if tc.shouldPass {
 			assert.Nil(t, err)
 		} else {

@@ -27,36 +27,27 @@ type MockSlackService struct {
 type SlackAnnouncer struct {
 	WebhookURL string
 	Enabled    bool
+	IconUrl    string
+	Username   string
 	Service    SlackAPI
 }
 
-type SlackPayload struct {
-	ProjectName string
-	Version     string
-	URL         string
-	IconUrl     string
-	Username    string
-}
-
-func NewSlackAnnouncer(url string, enabled bool, service SlackAPI) *SlackAnnouncer {
+func NewSlackAnnouncer(url, username, iconUrl string, service SlackAPI) *SlackAnnouncer {
 	return &SlackAnnouncer{
 		WebhookURL: url,
-		Enabled:    enabled,
+		Enabled:    true,
 		Service:    service,
+		Username:   username,
+		IconUrl:    iconUrl,
 	}
 }
 
-func (sa *SlackAnnouncer) Notify(payload announce.AnnouncerPayload) error {
-	slackPayload, ok := payload.(SlackPayload)
-	if !ok {
-		return fmt.Errorf("invalid payload type for SlackAnnouncer")
-	}
-
+func (sa *SlackAnnouncer) Notify(payload *announce.AnnouncerPayload) error {
 	msg := api.WebhookMessage{
 		Attachments: []api.Attachment{},
-		Username:    slackPayload.Username,
-		IconURL:     slackPayload.IconUrl,
-		Text:        fmt.Sprintf("%s %s is out! Check it out at %s", slackPayload.ProjectName, slackPayload.Version, slackPayload.URL),
+		Username:    sa.Username,
+		IconURL:     sa.IconUrl,
+		Text:        fmt.Sprintf("%s %s is out! Check it out at %s", payload.ProjectName, payload.Version, payload.URL),
 	}
 
 	return sa.Service.PostWebhook(sa.WebhookURL, &msg)

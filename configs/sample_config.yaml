@@ -1,10 +1,34 @@
-#announcer:
-#  slack:
-#    enabled: true
-#    webhookUrl: asdfasdfasdf
+announcer:
+  slack:
+    enabled: false
+    webhookUrl: asdfasdfasdf
+    username: "giantrooster"
+    iconUrl: "https://avatars.slack-edge.com/2018-03-07/324429893748_0b9b9b9b9b9b9b9b9b9b_512.png"
+  email:
+    provider: "aws"
+    enabled: true
+    type: "ses"  # or "smtp", "custom", etc.
+    from: "foo@example.com"
+    to:
+      - "foo2@example.com"
+    cc:
+      - "foo3@example.com"
+      - "foo4@example.com"
+    bcc:
+      - "foo5@example.com"
+    ses:
+#      region: "your_region"
+#      accessKey: "your_access_key"
+#      secretKey: "your_secret_key"
+#    smtp:
+#      host: "smtp.example.com"
+#      port: 587
+#      username: "your_smtp_username"
+#      password: "your_smtp_password"
 storage:
+  provider: "aws"
   s3:
-    provider: aws
+#    provider: aws
     accessKey: dsddsdssddsf
     secretKey: asdfasdfasdfasdf
     region: us-east-1
