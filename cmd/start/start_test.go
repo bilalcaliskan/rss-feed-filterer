@@ -79,6 +79,8 @@ func TestExecuteStartCmd(t *testing.T) {
 		},
 	}
 
+	announcers := []announce.Announcer{&announce.NoopAnnouncer{}}
+
 	for _, tc := range cases {
 		t.Logf("starting case %s\n", tc.caseName)
 		StartCmd.SetContext(context.Background())
@@ -93,12 +95,11 @@ func TestExecuteStartCmd(t *testing.T) {
 		mockS3.GetObjectAPI = tc.getObjectFunc
 		mockS3.PutObjectAPI = tc.putObjectFunc
 
-		announcer := &announce.NoopAnnouncer{}
 		logger := logging.GetLogger()
 
 		StartCmd.SetContext(context.WithValue(StartCmd.Context(), options.ConfigKey{}, conf))
 		StartCmd.SetContext(context.WithValue(StartCmd.Context(), options.S3ClientKey{}, mockS3))
-		StartCmd.SetContext(context.WithValue(StartCmd.Context(), options.AnnouncerKey{}, announcer))
+		StartCmd.SetContext(context.WithValue(StartCmd.Context(), options.AnnouncerKey{}, announcers))
 		StartCmd.SetContext(context.WithValue(StartCmd.Context(), options.LoggerKey{}, logger))
 
 		go func() {

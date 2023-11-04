@@ -17,8 +17,14 @@ func ReadConfig(path string) (conf *Config, err error) {
 		return nil, errors.Wrap(err, "an error occurred while unmarshaling config file")
 	}
 
-	if err := conf.Storage.SetAccessCredentialsFromEnv(); err != nil {
-		return nil, errors.Wrap(err, "an error occurred while setting credentials with env variables")
+	// s3 access credentials can also be set from env variables so we check them here
+	if err := conf.Storage.SetAccessCredentialsFromEnv(conf.Storage.Provider); err != nil {
+		return nil, errors.Wrap(err, "an error occurred while setting credentials with env variables for storage service")
+	}
+
+	// email access credentials can also be set from env variables so we check them here
+	if err := conf.Email.SetAccessCredentialsFromEnv(conf.Email.Provider); err != nil {
+		return nil, errors.Wrap(err, "an error occurred while setting credentials with env variables for email service")
 	}
 
 	return conf, nil
