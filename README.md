@@ -1,5 +1,5 @@
 # RSS Feed Filterer for Github Atom Feeds :newspaper_roll: :mag: :cloud:
-![CI](https://github.com/bilalcaliskan/rss-feed-filterer/workflows/CI/badge.svg?event=push)
+[![CI](https://github.com/bilalcaliskan/rss-feed-filterer/actions/workflows/push.yml/badge.svg)](https://github.com/bilalcaliskan/rss-feed-filterer/actions/workflows/push.yml)
 ![Go Report Card](https://goreportcard.com/badge/github.com/bilalcaliskan/rss-feed-filterer)
 ![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bilalcaliskan_rss-feed-filterer&metric=alert_status)
 ![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=bilalcaliskan_rss-feed-filterer&metric=sqale_rating)
