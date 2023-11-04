@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/bilalcaliskan/rss-feed-filterer/cmd/root/options"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce"
@@ -34,9 +33,9 @@ s3-manager clean --min-size-mb=1 --max-size-mb=1000 --keep-last-n-files=2 --sort
 			logger := cmd.Context().Value(options.LoggerKey{}).(zerolog.Logger)
 
 			// Create a cancellable context
-			ctx, cancel = context.WithCancel(context.Background())
-			defer cancel()
-			time.Sleep(1 * time.Second)
+			//ctx, cancel = context.WithCancel(context.Background())
+			//defer cancel()
+			//time.Sleep(1 * time.Second)
 			// Listen for interrupts to perform a graceful shutdown
 			go func() {
 				sigChan := make(chan os.Signal, 1)
