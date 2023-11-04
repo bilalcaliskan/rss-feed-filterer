@@ -21,6 +21,22 @@ RSS Feed Filterer is a sophisticated tool designed to efficiently monitor, filte
 
 ## Configuration
 ```shell
+Usage:
+  rss-feed-filterer [flags]
+  rss-feed-filterer [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  start       starts the main process by reading the config file
+
+Flags:
+  -c, --config-file string   path for the config file to be used
+  -h, --help                 help for rss-feed-filterer
+      --verbose              verbose output of the logging library as 'debug' (default false)
+  -v, --version              version for rss-feed-filterer
+
+Use "rss-feed-filterer [command] --help" for more information about a command.
 ```
 
 ## Installation
