@@ -27,6 +27,15 @@ func CreateConfig(accessKey, secretKey, region string) (aws.Config, error) {
 func CreateClient(accessKey, secretKey, region string) (*s3.Client, error) {
 	cfg, err := CreateConfig(accessKey, secretKey, region)
 	if err != nil {
+		return aws.Config{}, err
+	}
+
+	return cfg, nil
+}
+
+func CreateClient(accessKey, secretKey, region string) (*s3.Client, error) {
+	cfg, err := CreateConfig(accessKey, secretKey, region)
+	if err != nil {
 		return nil, err
 	}
 

@@ -8,6 +8,10 @@ import (
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce/email"
 	internalses "github.com/bilalcaliskan/rss-feed-filterer/internal/announce/email/ses"
 
+	"github.com/aws/aws-sdk-go-v2/service/ses"
+	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce/email"
+	internalses "github.com/bilalcaliskan/rss-feed-filterer/internal/announce/email/ses"
+
 	"github.com/bilalcaliskan/rss-feed-filterer/cmd/root/options"
 	"github.com/bilalcaliskan/rss-feed-filterer/cmd/start"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce"

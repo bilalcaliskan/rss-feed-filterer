@@ -59,6 +59,23 @@ func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, projectName st
 	}
 }
 
+// open file and read the content as string
+//func (r *ReleaseChecker) readFeed(projectName string) (*gofeed.Feed, error) {
+//	r.logger.Info().Str("projectName", projectName).Msg("trying to read the feed")
+//
+//	f, err := os.Open(fmt.Sprintf("%s/%s", r.FeedPath, projectName))
+//	if err != nil {
+//		return nil, err
+//	}
+//	defer f.Close()
+//
+//	content, err := ioutil.ReadAll(f)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	return r.ParseString(string(content))
+
 func (r *ReleaseChecker) fetchFeed(projectName string) (*gofeed.Feed, error) {
 	r.logger.Info().Str("projectName", projectName).Msg("trying to fetch the feed")
 
