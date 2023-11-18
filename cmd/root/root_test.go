@@ -27,6 +27,11 @@ func TestExecute(t *testing.T) {
 			true,
 		},
 		{
+			"Email enabled config",
+			[]string{"--config-file=../../test/config_email_enabled.yaml"},
+			true,
+		},
+		{
 			"Empty config path",
 			[]string{"--verbose"},
 			false,

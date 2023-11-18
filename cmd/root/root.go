@@ -3,7 +3,6 @@ package root
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/service/ses"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce/email"
@@ -47,9 +46,7 @@ mechanism to track multiple project releases.`,
 				Msg("rss-feed-filterer is started!")
 
 			if opts.VerboseLog {
-				fmt.Println("enabled")
 				logging.EnableDebugLogging()
-				fmt.Println("dummy")
 			}
 
 			cfg, err := config.ReadConfig(opts.ConfigFilePath)

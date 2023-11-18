@@ -1,5 +1,5 @@
 # RSS Feed Filterer for Github Atom Feeds :newspaper_roll: :mag: :cloud:
-![CI](https://github.com/bilalcaliskan/rss-feed-filterer/workflows/CI/badge.svg?event=push)
+[![CI](https://github.com/bilalcaliskan/rss-feed-filterer/actions/workflows/push.yml/badge.svg)](https://github.com/bilalcaliskan/rss-feed-filterer/actions/workflows/push.yml)
 ![Go Report Card](https://goreportcard.com/badge/github.com/bilalcaliskan/rss-feed-filterer)
 ![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bilalcaliskan_rss-feed-filterer&metric=alert_status)
 ![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=bilalcaliskan_rss-feed-filterer&metric=sqale_rating)
@@ -21,6 +21,22 @@ RSS Feed Filterer is a sophisticated tool designed to efficiently monitor, filte
 
 ## Configuration
 ```shell
+Usage:
+  rss-feed-filterer [flags]
+  rss-feed-filterer [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  start       starts the main process by reading the config file
+
+Flags:
+  -c, --config-file string   path for the config file to be used
+  -h, --help                 help for rss-feed-filterer
+      --verbose              verbose output of the logging library as 'debug' (default false)
+  -v, --version              version for rss-feed-filterer
+
+Use "rss-feed-filterer [command] --help" for more information about a command.
 ```
 
 ## Installation
