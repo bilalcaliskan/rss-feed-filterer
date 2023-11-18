@@ -18,16 +18,10 @@ import (
 
 func CreateConfig(accessKey, secretKey, region string) (aws.Config, error) {
 	appCreds := aws.NewCredentialsCache(credentials.NewStaticCredentialsProvider(accessKey, secretKey, ""))
-	cfg, err := config.LoadDefaultConfig(context.Background(),
+	return config.LoadDefaultConfig(context.Background(),
 		config.WithRegion(region),
 		config.WithCredentialsProvider(appCreds),
 	)
-
-	if err != nil {
-		return aws.Config{}, err
-	}
-
-	return cfg, nil
 }
 
 func CreateClient(accessKey, secretKey, region string) (*s3.Client, error) {
