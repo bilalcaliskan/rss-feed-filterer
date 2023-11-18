@@ -133,4 +133,8 @@ build: tidy
 
 .PHONY: run
 run: tidy
-	go run main.go
+	go run main.go start --config-file configs/sample_valid_config.yaml
+
+.PHONY: coverage
+coverage:
+	./scripts/coverage.sh

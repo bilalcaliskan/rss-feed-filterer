@@ -162,6 +162,58 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 			},
 		},
 		{
+			"Success but announcing disabled",
+			config.Repository{
+				Name:                 "project1",
+				Description:          "",
+				Url:                  "https://github.com/user1/project1",
+				CheckIntervalMinutes: 1,
+			},
+			[]announce.Announcer{},
+			nil,
+			10 * time.Second,
+			&gofeed.Feed{
+				Title:   "Release notes from project1",
+				Updated: "2023-08-04T12:15:04+03:00",
+				Items: []*gofeed.Item{
+					{
+						Title:           "v1.0.0",
+						Link:            "https://github.com/user1/project1/releases/tag/v1.0.0",
+						UpdatedParsed:   getTimeFromString("2023-08-04T12:21:41Z"),
+						PublishedParsed: getTimeFromString("2023-08-04T12:21:41Z"),
+					},
+					{
+						Title:           "v1.0.1",
+						Link:            "https://github.com/user1/project1/releases/tag/v1.0.1",
+						UpdatedParsed:   getTimeFromString("2023-08-04T12:21:41Z"),
+						PublishedParsed: getTimeFromString("2023-08-04T12:21:41Z"),
+					},
+					{
+						Title:           "v1.0.2",
+						Link:            "https://github.com/user1/project1/releases/tag/v1.0.2",
+						UpdatedParsed:   getTimeFromString("2023-08-04T12:21:41Z"),
+						PublishedParsed: getTimeFromString("2023-08-04T12:21:41Z"),
+					},
+				},
+			},
+			nil,
+			10,
+			func(ctx context.Context, params *s3.HeadObjectInput, optFns ...func(*s3.Options)) (*s3.HeadObjectOutput, error) {
+				return &s3.HeadObjectOutput{}, nil
+			},
+			func(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error) {
+				content, err := os.ReadFile("../../test/releases.json")
+				if err != nil {
+					return nil, err
+				}
+
+				return &s3.GetObjectOutput{Body: io.NopCloser(strings.NewReader(string(content)))}, nil
+			},
+			func(ctx context.Context, params *s3.PutObjectInput, optFns ...func(*s3.Options)) (*s3.PutObjectOutput, error) {
+				return &s3.PutObjectOutput{}, nil
+			},
+		},
+		{
 			"Success when ticker ticked once",
 			config.Repository{
 				Name:                 "project1",
@@ -330,16 +382,11 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 
 		// create a mock S3 client
 		mockS3 := new(aws.MockS3Client)
-		// override the headObjectFunc with mock headObjectFunc
 		mockS3.HeadObjectAPI = tc.headObjectFunc
-		// override the getObjectFunc with mock getObjectFunc
 		mockS3.GetObjectAPI = tc.getObjectFunc
-		// override the putObjectFunc with mock putObjectFunc
 		mockS3.PutObjectAPI = tc.putObjectFunc
 
 		var anns []announce.Announcer
-
-		// create a mock announcer
 		for _, a := range tc.announcers {
 			_, ok := a.(*slack.SlackAnnouncer)
 			if ok {

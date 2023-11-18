@@ -18,16 +18,10 @@ import (
 
 func CreateConfig(accessKey, secretKey, region string) (aws.Config, error) {
 	appCreds := aws.NewCredentialsCache(credentials.NewStaticCredentialsProvider(accessKey, secretKey, ""))
-	cfg, err := config.LoadDefaultConfig(context.Background(),
+	return config.LoadDefaultConfig(context.Background(),
 		config.WithRegion(region),
 		config.WithCredentialsProvider(appCreds),
 	)
-
-	if err != nil {
-		return aws.Config{}, err
-	}
-
-	return cfg, nil
 }
 
 func CreateClient(accessKey, secretKey, region string) (*s3.Client, error) {
@@ -113,7 +107,7 @@ func PutReleases(client S3ClientAPI, bucketName, key string, releases []types2.R
 		Bucket:        aws.String(bucketName),
 		Key:           aws.String(key),
 		Body:          strings.NewReader(string(data)),
-		ContentLength: int64(len(data)),
+		ContentLength: aws.Int64(int64(len(data))),
 		ContentType:   aws.String("application/json"),
 	}
 
