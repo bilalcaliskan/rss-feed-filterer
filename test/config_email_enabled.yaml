@@ -1,3 +1,5 @@
+global:
+  oneShot: false
 announcer:
   slack:
     enabled: false

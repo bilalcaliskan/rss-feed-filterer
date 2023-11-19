@@ -11,6 +11,11 @@ type Config struct {
 	Storage      `yaml:"storage"`
 	Announcer    `yaml:"announcer"`
 	Type         string `yaml:"type"`
+	Global       `yaml:"global"`
+}
+
+type Global struct {
+	OneShot bool `yaml:"oneShot"`
 }
 
 type Repository struct {
