@@ -3,6 +3,7 @@ package root
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/service/ses"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce/email"
@@ -45,15 +46,20 @@ mechanism to track multiple project releases.`,
 				Str("goArch", ver.GoArch).Str("gitCommit", ver.GitCommit).Str("buildDate", ver.BuildDate).
 				Msg("rss-feed-filterer is started!")
 
-			if opts.VerboseLog {
-				logging.EnableDebugLogging()
-			}
-
-			cfg, err := config.ReadConfig(opts.ConfigFilePath)
+			cfg, err := config.ReadConfig(cmd, opts.ConfigFilePath)
 			if err != nil {
 				logger.Error().Err(err).Msg("failed to read config")
 				return err
 			}
+
+			// check if verbose flag passed and enable debug logging
+			fmt.Println(cfg.Verbose)
+			if cfg.Verbose {
+				logger = logging.WithVerbose()
+			}
+
+			fmt.Println("here")
+			logger.Debug().Str("dsaf", "asdlkf").Msg("sldkfjalsdkfjasfd")
 
 			client, err := aws.CreateClient(cfg.AccessKey, cfg.SecretKey, cfg.Region)
 			if err != nil {

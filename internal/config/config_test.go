@@ -6,6 +6,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/spf13/cobra"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -19,6 +21,15 @@ func TestReadConfig(t *testing.T) {
 		{
 			"valid config path",
 			"../../test/config.yaml",
+			map[string]string{
+				"AWS_ACCESS_KEY": "testAccessKey",
+				"AWS_SECRET_KEY": "testSecretKey",
+			},
+			true,
+		},
+		{
+			"second valid config path",
+			"../../test/config_verbose.yaml",
 			map[string]string{
 				"AWS_ACCESS_KEY": "testAccessKey",
 				"AWS_SECRET_KEY": "testSecretKey",
@@ -49,7 +60,7 @@ func TestReadConfig(t *testing.T) {
 				}
 			}()
 
-			c, err := ReadConfig(tc.path)
+			c, err := ReadConfig(&cobra.Command{}, tc.path)
 			if tc.shouldPass {
 				assert.Nil(t, err)
 				assert.NotNil(t, c)
@@ -57,6 +68,7 @@ func TestReadConfig(t *testing.T) {
 				assert.NotNil(t, err)
 				assert.Nil(t, c)
 			}
+
 		})
 	}
 }

@@ -21,6 +21,10 @@ func GetLogger() zerolog.Logger {
 	return logger
 }
 
+func WithVerbose() zerolog.Logger {
+	return logger.With().Logger().Level(zerolog.DebugLevel)
+}
+
 func EnableDebugLogging() {
 	logger = logger.Level(zerolog.DebugLevel)
 }

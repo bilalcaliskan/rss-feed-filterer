@@ -16,6 +16,7 @@ type Config struct {
 
 type Global struct {
 	OneShot bool `yaml:"oneShot"`
+	Verbose bool `yaml:"verbose"`
 }
 
 type Repository struct {

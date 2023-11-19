@@ -10,6 +10,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/spf13/cobra"
+
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce"
@@ -85,7 +87,7 @@ func TestFilter(t *testing.T) {
 		mockS3.GetObjectAPI = tc.getObjectFunc
 		mockS3.PutObjectAPI = tc.putObjectFunc
 
-		cfg, err := config.ReadConfig(tc.configPath)
+		cfg, err := config.ReadConfig(&cobra.Command{}, tc.configPath)
 		assert.Nil(t, err)
 		assert.NotNil(t, cfg)
 

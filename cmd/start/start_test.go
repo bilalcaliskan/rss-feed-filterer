@@ -35,7 +35,7 @@ func TestExecuteStartCmd(t *testing.T) {
 	}{
 		{
 			"Success",
-			[]string{},
+			[]string{"--verbose"},
 			func(ctx context.Context, params *s3.HeadBucketInput, optFns ...func(*s3.Options)) (*s3.HeadBucketOutput, error) {
 				return &s3.HeadBucketOutput{}, nil
 			},
@@ -85,7 +85,7 @@ func TestExecuteStartCmd(t *testing.T) {
 		t.Logf("starting case %s\n", tc.caseName)
 		StartCmd.SetContext(context.Background())
 
-		conf, err := config.ReadConfig("../../test/config.yaml")
+		conf, err := config.ReadConfig(StartCmd, "../../test/config.yaml")
 		assert.Nil(t, err)
 		assert.NotNil(t, conf)
 
