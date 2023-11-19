@@ -2,6 +2,8 @@
 #  slack:
 #    enabled: true
 #    webhookUrl: asdfasdfasdf
+global:
+  oneShot: false
 storage:
   s3:
     provider: aws

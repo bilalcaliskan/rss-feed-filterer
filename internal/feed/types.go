@@ -40,14 +40,18 @@ func NewReleaseChecker(client aws.S3ClientAPI, repo config.Repository, parser Pa
 	}
 }
 
-func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, projectName string) {
+func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, projectName string, oneShot bool) {
 	r.logger = r.logger.With().Str("projectName", projectName).Logger()
-
-	ticker := time.NewTicker(time.Duration(r.CheckIntervalMinutes) * time.Minute)
-	defer ticker.Stop()
 
 	// Run immediately since ticker does not run on first hit
 	r.checkFeed(projectName, r.Repository)
+
+	if oneShot {
+		return
+	}
+
+	ticker := time.NewTicker(time.Duration(r.CheckIntervalMinutes) * time.Minute)
+	defer ticker.Stop()
 
 	for {
 		select {
@@ -59,33 +63,21 @@ func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, projectName st
 	}
 }
 
-// open file and read the content as string
-//func (r *ReleaseChecker) readFeed(projectName string) (*gofeed.Feed, error) {
-//	r.logger.Info().Str("projectName", projectName).Msg("trying to read the feed")
-//
-//	f, err := os.Open(fmt.Sprintf("%s/%s", r.FeedPath, projectName))
-//	if err != nil {
-//		return nil, err
-//	}
-//	defer f.Close()
-//
-//	content, err := ioutil.ReadAll(f)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	return r.ParseString(string(content))
-
-func (r *ReleaseChecker) fetchFeed(projectName string) (*gofeed.Feed, error) {
+// this method is for testing purposes
+/*func (r *ReleaseChecker) fetchFeed(projectName string) (*gofeed.Feed, error) {
 	r.logger.Info().Str("projectName", projectName).Msg("trying to fetch the feed")
 
-	// this block is for testing purposes
-	/*content, err := ioutil.ReadFile("test/releases.atom")
+	content, err := ioutil.ReadFile("test/releases.atom")
 	if err != nil {
 		log.Fatal(err)
 	}
 	text := string(content)
-	return gofeed.NewParser().ParseString(text)*/
+	return gofeed.NewParser().ParseString(text)
+}*/
+
+// this method is for production
+func (r *ReleaseChecker) fetchFeed(projectName string) (*gofeed.Feed, error) {
+	r.logger.Info().Str("projectName", projectName).Msg("trying to fetch the feed")
 
 	// this block is for production that gets the feed from url defined in config file
 	return r.ParseURL(fmt.Sprintf("%s/releases.atom", r.Url))

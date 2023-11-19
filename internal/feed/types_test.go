@@ -52,6 +52,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 		ctxDuration          time.Duration
 		parserResponse       *gofeed.Feed
 		parserErr            error
+		oneShot              bool
 		checkIntervalSeconds int
 		headObjectFunc       func(ctx context.Context, params *s3.HeadObjectInput, optFns ...func(*s3.Options)) (*s3.HeadObjectOutput, error)
 		getObjectFunc        func(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error)
@@ -93,6 +94,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 				},
 			},
 			nil,
+			false,
 			10,
 			func(ctx context.Context, params *s3.HeadObjectInput, optFns ...func(*s3.Options)) (*s3.HeadObjectOutput, error) {
 				return &s3.HeadObjectOutput{}, nil
@@ -145,6 +147,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 				},
 			},
 			nil,
+			true,
 			10,
 			func(ctx context.Context, params *s3.HeadObjectInput, optFns ...func(*s3.Options)) (*s3.HeadObjectOutput, error) {
 				return &s3.HeadObjectOutput{}, nil
@@ -197,6 +200,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 				},
 			},
 			nil,
+			false,
 			10,
 			func(ctx context.Context, params *s3.HeadObjectInput, optFns ...func(*s3.Options)) (*s3.HeadObjectOutput, error) {
 				return &s3.HeadObjectOutput{}, nil
@@ -243,6 +247,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 				},
 			},
 			nil,
+			false,
 			10,
 			func(ctx context.Context, params *s3.HeadObjectInput, optFns ...func(*s3.Options)) (*s3.HeadObjectOutput, error) {
 				return &s3.HeadObjectOutput{}, nil
@@ -272,6 +277,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 			10 * time.Second,
 			&gofeed.Feed{Title: "dummy"},
 			nil,
+			false,
 			10,
 			func(ctx context.Context, params *s3.HeadObjectInput, optFns ...func(*s3.Options)) (*s3.HeadObjectOutput, error) {
 				return &s3.HeadObjectOutput{}, nil
@@ -296,6 +302,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 			10 * time.Second,
 			nil,
 			errors.New("injected error"),
+			false,
 			10,
 			func(ctx context.Context, params *s3.HeadObjectInput, optFns ...func(*s3.Options)) (*s3.HeadObjectOutput, error) {
 				return &s3.HeadObjectOutput{}, nil
@@ -325,6 +332,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 			10 * time.Second,
 			&gofeed.Feed{Title: "dummy"},
 			nil,
+			false,
 			10,
 			func(ctx context.Context, params *s3.HeadObjectInput, optFns ...func(*s3.Options)) (*s3.HeadObjectOutput, error) {
 				return nil, &types.NoSuchKey{}
@@ -354,6 +362,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 			10 * time.Second,
 			&gofeed.Feed{Title: "dummy"},
 			nil,
+			false,
 			10,
 			func(ctx context.Context, params *s3.HeadObjectInput, optFns ...func(*s3.Options)) (*s3.HeadObjectOutput, error) {
 				return nil, &types.NoSuchKey{}
@@ -420,7 +429,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 		assert.NotEqual(t, "", projectName)
 
 		// check the feed
-		rc.CheckGithubReleases(ctx, projectName)
+		rc.CheckGithubReleases(ctx, projectName, tc.oneShot)
 	}
 }
 
