@@ -1,5 +1,6 @@
 global:
   oneShot: false
+  verbose: false
 announcer:
   slack:
     enabled: true

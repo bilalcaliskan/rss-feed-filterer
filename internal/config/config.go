@@ -1,21 +1,37 @@
 package config
 
 import (
-	"os"
-
 	"github.com/pkg/errors"
-	"gopkg.in/yaml.v3"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
-func ReadConfig(path string) (conf *Config, err error) {
-	file, err := os.ReadFile(path)
-	if err != nil {
+func ReadConfig(cmd *cobra.Command, path string) (conf *Config, err error) {
+	viper.SetConfigName(path)
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(".")
+
+	if err := viper.ReadInConfig(); err != nil {
 		return nil, errors.Wrap(err, "an error occurred while reading config file")
 	}
 
-	if err := yaml.Unmarshal(file, &conf); err != nil {
+	if err := viper.Unmarshal(&conf); err != nil {
 		return nil, errors.Wrap(err, "an error occurred while unmarshaling config file")
 	}
+
+	if cmd.Flags().Changed("verbose") {
+		verbose, _ := cmd.Flags().GetBool("verbose")
+		conf.Verbose = verbose
+	}
+
+	//file, err := os.ReadFile(path)
+	//if err != nil {
+	//	return nil, errors.Wrap(err, "an error occurred while reading config file")
+	//}
+	//
+	//if err := yaml.Unmarshal(file, &conf); err != nil {
+	//	return nil, errors.Wrap(err, "an error occurred while unmarshaling config file")
+	//}
 
 	// s3 access credentials can also be set from env variables so we check them here
 	if err := conf.Storage.SetAccessCredentialsFromEnv(conf.Storage.Provider); err != nil {

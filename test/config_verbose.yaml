@@ -1,16 +1,10 @@
+#announcer:
+#  slack:
+#    enabled: true
+#    webhookUrl: asdfasdfasdf
 global:
   oneShot: false
-  verbose: false
-announcer:
-  slack:
-    enabled: false
-  email:
-    provider: "aws"
-    enabled: true
-    type: "ses"  # or "smtp", "custom", etc.
-    from: "info@giantrooster.tech"
-    to:
-      - "bilalcaliskan@protonmail.com"
+  verbose: true
 storage:
   s3:
     provider: aws

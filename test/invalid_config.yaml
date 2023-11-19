@@ -4,6 +4,7 @@
 #    webhookUrl: asdfasdfasdf
 global:
   oneShot: false
+  verbose: false
 storage:
   s3:
     provider: aws

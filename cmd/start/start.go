@@ -27,16 +27,13 @@ var (
 s3-manager clean --min-size-mb=1 --max-size-mb=1000 --keep-last-n-files=2 --sort-by=lastModificationDate --order=ascending
 		`,
 		RunE: func(cmd *cobra.Command, args []string) error {
+			// Get the values from the context
 			cfg := cmd.Context().Value(options.ConfigKey{}).(*config.Config)
 			client := cmd.Context().Value(options.S3ClientKey{}).(aws.S3ClientAPI)
 			announcers := cmd.Context().Value(options.AnnouncerKey{}).([]announce.Announcer)
 			logger := cmd.Context().Value(options.LoggerKey{}).(zerolog.Logger)
 
-			// Create a cancellable context
-			//ctx, cancel = context.WithCancel(context.Background())
-			//defer cancel()
-			//time.Sleep(1 * time.Second)
-			// Listen for interrupts to perform a graceful shutdown
+			// Listen for interrupt signals and cancel the context
 			go func() {
 				sigChan := make(chan os.Signal, 1)
 				signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
@@ -45,6 +42,7 @@ s3-manager clean --min-size-mb=1 --max-size-mb=1000 --keep-last-n-files=2 --sort
 				cancel()
 			}()
 
+			// Start the filtering process
 			if err := feed.Filter(ctx, cfg, client, announcers); err != nil {
 				logger.Error().Err(err).Msg("filtering process failed, shutting down...")
 				return err
