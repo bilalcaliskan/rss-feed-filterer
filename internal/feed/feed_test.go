@@ -20,6 +20,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// TestFilter function tests if Filter function running properly
 func TestFilter(t *testing.T) {
 	cases := []struct {
 		caseName       string

@@ -25,19 +25,23 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
+// mockParser is a mock type for Parser interface
 type mockParser struct {
 	mock.Mock
 }
 
+// ParseURL mocks ParseURL function
 func (m *mockParser) ParseURL(url string) (*gofeed.Feed, error) {
 	args := m.Called(url)
 	return args.Get(0).(*gofeed.Feed), args.Error(1)
 }
 
+// mockSlackAPI is a mock type for slack API
 type mockSlackAPI struct {
 	mock.Mock
 }
 
+// PostWebhook mocks PostWebhook function
 func (m *mockSlackAPI) PostWebhook(url string, msg *api.WebhookMessage) error {
 	args := m.Called(url, msg)
 	return args.Error(0)
@@ -380,11 +384,6 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 			},
 		},
 	}
-
-	// fill the semaphore channel with empty objects
-	//for i := 0; i < 5; i++ {
-	//	sem <- struct{}{}
-	//}
 
 	for _, tc := range cases {
 		t.Logf("starting case %s", tc.caseName)

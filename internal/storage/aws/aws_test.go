@@ -14,7 +14,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
-	types2 "github.com/bilalcaliskan/rss-feed-filterer/internal/types"
+	internaltypes "github.com/bilalcaliskan/rss-feed-filterer/internal/types"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -131,13 +131,13 @@ func getTime(str string) *time.Time {
 func TestGetReleases(t *testing.T) {
 	cases := []struct {
 		caseName         string
-		expectedReleases []types2.Release
+		expectedReleases []internaltypes.Release
 		shouldPass       bool
 		getFunc          func(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error)
 	}{
 		{
 			"Success",
-			[]types2.Release{
+			[]internaltypes.Release{
 				{
 					ProjectName: "user1/project1",
 					Version:     "v1.0.0",
@@ -249,6 +249,6 @@ func TestPutReleases(t *testing.T) {
 		mockS3 := new(MockS3Client)
 		mockS3.PutObjectAPI = tc.putFunc
 
-		assert.Equal(t, tc.expected, PutReleases(mockS3, "thisisdemobucket", "thisisdemokey", []types2.Release{}))
+		assert.Equal(t, tc.expected, PutReleases(mockS3, "thisisdemobucket", "thisisdemokey", []internaltypes.Release{}))
 	}
 }
