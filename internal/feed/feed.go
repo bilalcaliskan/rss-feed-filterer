@@ -19,6 +19,7 @@ const (
 	releaseFileKey     = "releases.json"
 )
 
+// Filter function filters the feed and uploads the filtered feed to the bucket if there is a new release
 func Filter(ctx context.Context, cfg *config.Config, client aws.S3ClientAPI, announcers []announce.Announcer) error {
 	logger := logging.GetLogger()
 	if !aws.IsBucketExists(client, cfg.BucketName) {
@@ -29,6 +30,7 @@ func Filter(ctx context.Context, cfg *config.Config, client aws.S3ClientAPI, ann
 
 	var wg sync.WaitGroup
 
+	// iterate over repositories and start a goroutine for each repository to check for new releases
 	for _, repo := range cfg.Repositories {
 		wg.Add(1)
 		go func(repo config.Repository) {
@@ -46,12 +48,14 @@ func Filter(ctx context.Context, cfg *config.Config, client aws.S3ClientAPI, ann
 	}
 
 	doneChan := make(chan struct{})
-	// Wait for all the work to finish in a separate goroutine
+	// start a goroutine to wait for all other goroutines to finish their works
 	go func() {
 		wg.Wait()
-		close(doneChan) // Close the channel to signal all goroutines have completed
+		// notify the main goroutine that all other goroutines are finished their works
+		close(doneChan)
 	}()
 
+	// block until we receive a notification from the doneChan
 	<-doneChan
 	logger.Info().Msg("all goroutines are finished their works, shutting down...")
 	return nil

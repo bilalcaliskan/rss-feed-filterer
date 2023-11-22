@@ -11,6 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// TestReadConfig function tests if ReadConfig function running properly
 func TestReadConfig(t *testing.T) {
 	testCases := []struct {
 		name       string
@@ -44,6 +45,7 @@ func TestReadConfig(t *testing.T) {
 		},
 	}
 
+	// run test cases
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Logf("starting case %s", tc.name)

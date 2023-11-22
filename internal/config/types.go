@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Config struct represents the config file
 type Config struct {
 	Repositories []Repository `yaml:"repositories"`
 	Storage      `yaml:"storage"`
@@ -14,17 +15,18 @@ type Config struct {
 	Global       `yaml:"global"`
 }
 
+// Global struct represents the global config
 type Global struct {
 	OneShot bool `yaml:"oneShot"`
 	Verbose bool `yaml:"verbose"`
 }
 
+// Repository struct represents the repository config
 type Repository struct {
 	Name                 string `yaml:"name"`
 	Description          string `yaml:"description"`
 	Url                  string `yaml:"url"`
 	CheckIntervalMinutes int    `yaml:"checkIntervalMinutes"`
-	//FeedType             string `yaml:"feedType"`
 }
 
 type Announcer struct {

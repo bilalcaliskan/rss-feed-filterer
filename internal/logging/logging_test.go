@@ -13,7 +13,3 @@ func TestGetLogger(t *testing.T) {
 	logger := GetLogger()
 	assert.NotNil(t, logger)
 }
-
-func TestEnableDebugLogging(t *testing.T) {
-	EnableDebugLogging()
-}

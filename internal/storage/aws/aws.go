@@ -13,7 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
-	types2 "github.com/bilalcaliskan/rss-feed-filterer/internal/types"
+	internaltypes "github.com/bilalcaliskan/rss-feed-filterer/internal/types"
 )
 
 func CreateConfig(accessKey, secretKey, region string) (aws.Config, error) {
@@ -33,7 +33,7 @@ func CreateClient(accessKey, secretKey, region string) (*s3.Client, error) {
 	return s3.NewFromConfig(cfg), nil
 }
 
-func GetReleases(client S3ClientAPI, bucketName, key string) (releases []types2.Release, err error) {
+func GetReleases(client S3ClientAPI, bucketName, key string) (releases []internaltypes.Release, err error) {
 	mu := &sync.Mutex{}
 
 	// fetch all the objects in target bucket
@@ -97,7 +97,7 @@ func IsBucketExists(client S3ClientAPI, bucketName string) bool {
 	return true
 }
 
-func PutReleases(client S3ClientAPI, bucketName, key string, releases []types2.Release) error {
+func PutReleases(client S3ClientAPI, bucketName, key string, releases []internaltypes.Release) error {
 	data, err := json.MarshalIndent(&releases, "", "    ")
 	if err != nil {
 		return err

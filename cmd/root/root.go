@@ -3,7 +3,6 @@ package root
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/service/ses"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce/email"
@@ -53,13 +52,10 @@ mechanism to track multiple project releases.`,
 			}
 
 			// check if verbose flag passed and enable debug logging
-			fmt.Println(cfg.Verbose)
 			if cfg.Verbose {
 				logger = logging.WithVerbose()
+				logger.Debug().Str("foo", "bar").Msg("this is a dummy log")
 			}
-
-			fmt.Println("here")
-			logger.Debug().Str("dsaf", "asdlkf").Msg("sldkfjalsdkfjasfd")
 
 			client, err := aws.CreateClient(cfg.AccessKey, cfg.SecretKey, cfg.Region)
 			if err != nil {

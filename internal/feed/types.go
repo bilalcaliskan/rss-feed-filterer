@@ -16,10 +16,12 @@ import (
 	"github.com/rs/zerolog"
 )
 
+// Parser is an interface for parsing feed url
 type Parser interface {
 	ParseURL(url string) (*gofeed.Feed, error)
 }
 
+// ReleaseChecker checks for new releases and uploads them to the bucket if there is a new release
 type ReleaseChecker struct {
 	aws.S3ClientAPI
 	bucketName string
@@ -29,6 +31,7 @@ type ReleaseChecker struct {
 	announcers []announce.Announcer
 }
 
+// NewReleaseChecker creates a new ReleaseChecker instance
 func NewReleaseChecker(client aws.S3ClientAPI, repo config.Repository, parser Parser, bucketName string, logger zerolog.Logger, announcers []announce.Announcer) *ReleaseChecker {
 	return &ReleaseChecker{
 		S3ClientAPI: client,
@@ -40,6 +43,7 @@ func NewReleaseChecker(client aws.S3ClientAPI, repo config.Repository, parser Pa
 	}
 }
 
+// CheckGithubReleases checks for new releases and uploads them to the bucket if there is a new release
 func (r *ReleaseChecker) CheckGithubReleases(ctx context.Context, projectName string, oneShot bool) {
 	r.logger = r.logger.With().Str("projectName", projectName).Logger()
 
