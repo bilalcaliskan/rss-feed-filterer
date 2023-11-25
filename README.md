@@ -48,7 +48,7 @@ Binary can be downloaded from [Releases](https://github.com/bilalcaliskan/rss-fe
 
 ## Development
 This project requires below tools while developing:
-- [Golang 1.20](https://golang.org/doc/go1.20)
+- [Golang 1.21](https://golang.org/doc/go1.21)
 - [pre-commit](https://pre-commit.com/)
 
 After you installed [pre-commit](https://pre-commit.com/) and the rest, simply run below command to prepare your

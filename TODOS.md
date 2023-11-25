@@ -1,2 +1,0 @@
-- [ ] get webhook url from env
-- [ ] ability to refer tags
