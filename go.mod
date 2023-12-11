@@ -7,7 +7,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.25.11
 	github.com/aws/aws-sdk-go-v2/credentials v1.16.9
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.47.5
-	github.com/aws/aws-sdk-go-v2/service/ses v1.19.2
+	github.com/aws/aws-sdk-go-v2/service/ses v1.19.5
 	github.com/mmcdole/gofeed v1.2.1
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.31.0
