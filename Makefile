@@ -3,6 +3,7 @@ GOLANGCI_LINT_VERSION ?= latest
 REVIVE_VERSION ?= latest
 GOIMPORTS_VERSION ?= latest
 INEFFASSIGN_VERSION ?= latest
+MOCKERY_VERSION ?= v2.39.1
 
 LOCAL_BIN := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))/.bin
 
@@ -21,8 +22,12 @@ pre-commit-setup:
 	pre-commit install -c build/ci/.pre-commit-config.yaml
 
 .PHONY: tools
-tools:  golangci-lint-install revive-install go-imports-install ineffassign-install errcheck-install
+tools:  mockery-install golangci-lint-install revive-install go-imports-install ineffassign-install errcheck-install
 	go mod tidy
+
+.PHONY: mockery-install
+mockery-install:
+	GOBIN=$(LOCAL_BIN) go install github.com/vektra/mockery/v2@$(MOCKERY_VERSION)
 
 .PHONY: golangci-lint-install
 golangci-lint-install:
@@ -103,22 +108,22 @@ run-vet:
 	go vet ./... || (echo vet returned an error, exiting!; sh -c 'exit 1';)
 
 .PHONY: test
-test: tidy
+test: generate-mocks tidy
 	$(info starting the test for whole module...)
 	go test -tags "unit e2e integration" -failfast -vet=off -race -coverprofile=all_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
 
 .PHONY: test-unit
-test-unit: tidy
+test-unit: generate-mocks tidy
 	$(info starting the unit test for whole module...)
 	go test -tags "unit" -failfast -vet=off -race -coverprofile=unit_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
 
 .PHONY: test-e2e
-test-e2e: tidy
+test-e2e: generate-mocks tidy
 	$(info starting the e2e test for whole module...)
 	go test -tags "e2e" -failfast -vet=off -race -coverprofile=e2e_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
 
 .PHONY: test-integration
-test-integration: tidy
+test-integration: generate-mocks tidy
 	$(info starting the integration test for whole module...)
 	go test -tags "integration" -failfast -vet=off -race -coverprofile=integration_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
 
@@ -138,3 +143,7 @@ run: tidy
 .PHONY: coverage
 coverage:
 	./scripts/coverage.sh
+
+.PHONY: generate-mocks
+generate-mocks: mockery-install
+	$(LOCAL_BIN)/mockery || (echo mockery returned an error, exiting!; sh -c 'exit 1';)
