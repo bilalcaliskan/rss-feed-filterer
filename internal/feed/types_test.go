@@ -26,15 +26,15 @@ import (
 )
 
 // mockParser is a mock type for Parser interface
-type mockParser struct {
-	mock.Mock
-}
+//type mockParser struct {
+//	mock.Mock
+//}
 
 // ParseURL mocks ParseURL function
-func (m *mockParser) ParseURL(url string) (*gofeed.Feed, error) {
-	args := m.Called(url)
-	return args.Get(0).(*gofeed.Feed), args.Error(1)
-}
+//func (m *mockParser) ParseURL(url string) (*gofeed.Feed, error) {
+//	args := m.Called(url)
+//	return args.Get(0).(*gofeed.Feed), args.Error(1)
+//}
 
 // mockSlackAPI is a mock type for slack API
 type mockSlackAPI struct {
@@ -411,7 +411,7 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 		}
 
 		// create a mock parser
-		parser := new(mockParser)
+		parser := new(MockParser)
 		// override the ParseURL with mock ParseURL
 		parser.On("ParseURL", mock.AnythingOfType("string")).Return(tc.parserResponse, tc.parserErr)
 
