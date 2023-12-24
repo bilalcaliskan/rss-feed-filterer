@@ -82,17 +82,10 @@ mechanism to track multiple project releases.`,
 					sesClient := ses.NewFromConfig(awsCfg)
 					sender = internalses.NewSESSender(sesClient)
 				}
-				//} else if cfg.Announcer.Email.Type == "smtp" {
-				//	// TODO: implement smtp announcer
-				//}
 
 				announcer := email.NewEmailAnnouncer(sender, cfg.Announcer.Email.From, cfg.Announcer.Email.To, cfg.Announcer.Email.Cc, cfg.Announcer.Email.Bcc)
 				announcers = append(announcers, announcer)
 			}
-
-			//else if cfg.Announcer.Email.Enabled {
-			//	announcer = &announce.NoopAnnouncer{}
-			//}
 
 			cmd.SetContext(context.WithValue(cmd.Context(), options.ConfigKey{}, cfg))
 			cmd.SetContext(context.WithValue(cmd.Context(), options.S3ClientKey{}, client))

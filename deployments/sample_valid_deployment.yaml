@@ -1,0 +1,102 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rss-feed-filterer-config
+  namespace: default
+data:
+  config.yaml: |
+    global:
+      oneShot: false
+      verbose: false
+    announcer:
+      slack:
+        enabled: true
+        # webhookUrl: "https://hooks.slack.com/services/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"
+        webhookUrl: "https://hooks.slack.com/services/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"
+        username: "goreleaser"
+        iconUrl: "https://avatars.slack-edge.com/2018-03-07/324429893748_0b9b9b9b9b9b9b9b9b9b_512.png"
+    storage:
+      provider: "aws"
+      # rest of the credentials will be read from environment variables
+    repositories:
+      - name: bilalcaliskan/atom-feed-poc
+        description: sample description
+        url: "https://github.com/bilalcaliskan/atom-feed-poc"
+        checkIntervalMinutes: 1
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: rss-feed-filterer-secret
+  namespace: default
+type: Opaque
+data:
+  STORAGE_AWS_ACCESS_KEY: QUtJQTNON1dRRjM2NEtEV0xBWEEK
+  STORAGE_AWS_SECRET_KEY: U2xtRUxST3p4OURNWXl3U1RKN3ZpR2dGMGNPNHNQMHVGZXRkSkZ1dQo=
+  STORAGE_AWS_REGION: ZXUtY2VudHJhbC0xCg==
+  STORAGE_AWS_BUCKET_NAME: cGxhdGZvcm0tcmVsZWFzZS10cmFjawo=
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: rss-feed-filterer
+  name: rss-feed-filterer
+  namespace: default
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: rss-feed-filterer
+      deployment: rss-feed-filterer
+  template:
+    metadata:
+      labels:
+        app: rss-feed-filterer
+        deployment: rss-feed-filterer
+    spec:
+      containers:
+        - image: 'registry.trendyol.com/platform/devops/base/apps/pe-common/rss-feed-filterer:1.3.2'
+          command: [ "/bin/sh", "-c", "--" ]
+          args: [ "while true; do sleep 30; done;" ]
+          imagePullPolicy: Always
+          name: rss-feed-filterer
+          resources:
+            limits:
+              cpu: 400m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          env:
+            - name: STORAGE_AWS_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: rss-feed-filterer-secret
+                  key: STORAGE_AWS_ACCESS_KEY
+            - name: STORAGE_AWS_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: rss-feed-filterer-secret
+                  key: STORAGE_AWS_SECRET_KEY
+            - name: STORAGE_AWS_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: rss-feed-filterer-secret
+                  key: STORAGE_AWS_REGION
+            - name: STORAGE_AWS_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: rss-feed-filterer-secret
+                  key: STORAGE_AWS_BUCKET_NAME
+          volumeMounts:
+            - name: config-volume
+              mountPath: /home/nonroot
+      imagePullSecrets:
+        - name: ty-docker-registry
+      volumes:
+        - name: config-volume
+          configMap:
+            name: rss-feed-filterer-config
