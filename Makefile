@@ -1,14 +1,12 @@
-ERRCHECK_VERSION ?= latest
-GOLANGCI_LINT_VERSION ?= latest
-REVIVE_VERSION ?= latest
-GOIMPORTS_VERSION ?= latest
-INEFFASSIGN_VERSION ?= latest
-MOCKERY_VERSION ?= v2.39.1
+GOLANGCI_LINT_VERSION := latest
+REVIVE_VERSION := v1.3.4
+MOCKERY_VERSION := v2.39.1
 
 LOCAL_BIN := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))/.bin
+DEFAULT_GO_TEST_CMD ?= go test ./... -race -covermode=atomic
 
 .PHONY: all
-all: clean tools lint fmt test build
+all: clean tools lint test build
 
 .PHONY: clean
 clean:
@@ -22,7 +20,7 @@ pre-commit-setup:
 	pre-commit install -c build/ci/.pre-commit-config.yaml
 
 .PHONY: tools
-tools:  mockery-install golangci-lint-install revive-install go-imports-install ineffassign-install errcheck-install
+tools:  mockery-install golangci-lint-install revive-install
 	go mod tidy
 
 .PHONY: mockery-install
@@ -37,16 +35,8 @@ golangci-lint-install:
 revive-install:
 	GOBIN=$(LOCAL_BIN) go install github.com/mgechev/revive@$(REVIVE_VERSION)
 
-.PHONY: ineffassign-install
-ineffassign-install:
-	GOBIN=$(LOCAL_BIN) go install github.com/gordonklaus/ineffassign@$(INEFFASSIGN_VERSION)
-
-.PHONY: errcheck-install
-errcheck-install:
-	GOBIN=$(LOCAL_BIN) go install github.com/kisielk/errcheck@$(ERRCHECK_VERSION)
-
 .PHONY: lint
-lint: tools run-lint
+lint: tools lint-golangci-lint run-lint
 
 .PHONY: run-lint
 run-lint: lint-golangci-lint lint-revive
@@ -74,58 +64,25 @@ upgrade-direct-deps: tidy
 tidy:
 	go mod tidy
 
-.PHONY: run-goimports
-run-goimports: go-imports-install
-	for item in `find . -type f -name '*.go' -not -path './vendor/*'`; do \
-		$(LOCAL_BIN)/goimports -l -w $$item ; \
-	done
-
-.PHONY: go-imports-install
-go-imports-install:
-	GOBIN=$(LOCAL_BIN) go install golang.org/x/tools/cmd/goimports@$(GOIMPORTS_VERSION)
-
-.PHONY: fmt
-fmt: tools run-errcheck run-fmt run-ineffassign run-vet
-
-.PHONY: run-errcheck
-run-errcheck:
-	$(info running errcheck...)
-	$(LOCAL_BIN)/errcheck ./... || (echo errcheck returned an error, exiting!; sh -c 'exit 1';)
-
-.PHONY: run-fmt
-run-fmt:
-	$(info running fmt...)
-	go fmt ./... || (echo fmt returned an error, exiting!; sh -c 'exit 1';)
-
-.PHONY: run-ineffassign
-run-ineffassign:
-	$(info running ineffassign...)
-	$(LOCAL_BIN)/ineffassign ./... || (echo ineffassign returned an error, exiting!; sh -c 'exit 1';)
-
-.PHONY: run-vet
-run-vet:
-	$(info running vet...)
-	go vet ./... || (echo vet returned an error, exiting!; sh -c 'exit 1';)
-
 .PHONY: test
-test: generate-mocks tidy
+test: generate-mocks
 	$(info starting the test for whole module...)
-	go test -tags "unit e2e integration" -failfast -vet=off -race -coverprofile=all_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
+	$(DEFAULT_GO_TEST_CMD) -tags "unit e2e integration" -coverprofile=all_coverage.txt || (echo an error while testing, exiting!; sh -c 'exit 1';)
 
 .PHONY: test-unit
-test-unit: generate-mocks tidy
+test-unit: generate-mocks
 	$(info starting the unit test for whole module...)
-	go test -tags "unit" -failfast -vet=off -race -coverprofile=unit_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
+	$(DEFAULT_GO_TEST_CMD) -tags "unit" -coverprofile=unit_coverage.txt || (echo an error while testing, exiting!; sh -c 'exit 1';)
 
 .PHONY: test-e2e
-test-e2e: generate-mocks tidy
+test-e2e: generate-mocks
 	$(info starting the e2e test for whole module...)
-	go test -tags "e2e" -failfast -vet=off -race -coverprofile=e2e_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
+	$(DEFAULT_GO_TEST_CMD) -tags "e2e" -coverprofile=e2e_coverage.txt || (echo an error while testing, exiting!; sh -c 'exit 1';)
 
 .PHONY: test-integration
-test-integration: generate-mocks tidy
+test-integration: generate-mocks
 	$(info starting the integration test for whole module...)
-	go test -tags "integration" -failfast -vet=off -race -coverprofile=integration_coverage.txt -covermode=atomic ./... || (echo an error while testing, exiting!; sh -c 'exit 1';)
+	$(DEFAULT_GO_TEST_CMD) -tags "integration" -coverprofile=integration_coverage.txt || (echo an error while testing, exiting!; sh -c 'exit 1';)
 
 .PHONY: update
 update: tidy
@@ -140,10 +97,12 @@ build: tidy
 run: tidy
 	go run main.go start --config-file configs/sample_valid_config.yaml
 
-.PHONY: coverage
-coverage:
-	./scripts/coverage.sh
+.PHONY: test-coverage
+test-coverage: generate-mocks
+	$(DEFAULT_GO_TEST_CMD) -tags "unit e2e integration"
+	go tool cover -html=all_coverage.txt -o all_cover.html
+	open all_cover.html
 
 .PHONY: generate-mocks
-generate-mocks: mockery-install
+generate-mocks: mockery-install tidy vendor
 	$(LOCAL_BIN)/mockery || (echo mockery returned an error, exiting!; sh -c 'exit 1';)

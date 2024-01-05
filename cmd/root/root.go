@@ -102,6 +102,8 @@ mechanism to track multiple project releases.`,
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			logger.Warn().Msg("root command itself does not do anything, please run `start` subcommand")
+
 			return nil
 		},
 	}
