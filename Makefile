@@ -64,6 +64,10 @@ upgrade-direct-deps: tidy
 tidy:
 	go mod tidy
 
+.PHONY: vendor
+vendor:
+	go mod vendor
+
 .PHONY: test
 test: generate-mocks
 	$(info starting the test for whole module...)
