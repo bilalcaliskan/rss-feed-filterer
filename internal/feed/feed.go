@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"sync"
+	"time"
 
 	"github.com/mmcdole/gofeed"
 
@@ -21,6 +22,9 @@ const (
 
 // Filter function filters the feed and uploads the filtered feed to the bucket if there is a new release
 func Filter(ctx context.Context, cfg *config.Config, client aws.S3ClientAPI, announcers []announce.Announcer) error {
+	// Create a buffered channel to control the number of goroutines
+	sem := make(chan struct{}, cfg.MaxParallelism)
+
 	logger := logging.GetLogger()
 	if !aws.IsBucketExists(client, cfg.BucketName) {
 		err := fmt.Errorf("bucket %s not found", cfg.BucketName)
@@ -32,9 +36,24 @@ func Filter(ctx context.Context, cfg *config.Config, client aws.S3ClientAPI, ann
 
 	// iterate over repositories and start a goroutine for each repository to check for new releases
 	for _, repo := range cfg.Repositories {
+		sem <- struct{}{} // Will block if there is no empty slot in the buffer
+
 		wg.Add(1)
 		go func(repo config.Repository) {
-			defer wg.Done()
+			defer func() {
+				wg.Done()
+				<-sem // release the slot in the buffered channel
+			}()
+
+			logger.Info().
+				Str("repo", repo.Name).
+				Msg("goroutine started, acquiring slot")
+			time.Sleep(10 * time.Second)
+
+			logger.Info().
+				Str("repo", repo.Name).
+				Msg("goroutine finished, releasing slot")
+
 			checker := NewReleaseChecker(client, repo, gofeed.NewParser(), cfg.BucketName, logging.GetLogger(), announcers)
 
 			projectName, err := checker.extractProjectName()
@@ -47,16 +66,18 @@ func Filter(ctx context.Context, cfg *config.Config, client aws.S3ClientAPI, ann
 		}(repo)
 	}
 
-	doneChan := make(chan struct{})
-	// start a goroutine to wait for all other goroutines to finish their works
-	go func() {
-		wg.Wait()
-		// notify the main goroutine that all other goroutines are finished their works
-		close(doneChan)
-	}()
+	//doneChan := make(chan struct{})
+	//// start a goroutine to wait for all other goroutines to finish their works
+	//go func() {
+	//	wg.Wait()
+	//	// notify the main goroutine that all other goroutines are finished their works
+	//	close(doneChan)
+	//}()
+	//
+	//// block until we receive a notification from the doneChan
+	//<-doneChan
 
-	// block until we receive a notification from the doneChan
-	<-doneChan
+	wg.Wait()
 	logger.Info().Msg("all goroutines are finished their works, shutting down...")
 	return nil
 }

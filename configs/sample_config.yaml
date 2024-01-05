@@ -1,6 +1,7 @@
 global:
   oneShot: false
   verbose: false
+  maxParallelism: 2
 announcer:
   slack:
     enabled: false
@@ -44,7 +45,13 @@ repositories:
   - name: terraform
     description: sample description
     url: "https://github.com/hashicorp/terraform"
-    checkIntervalMinutes: 30
+    checkIntervalMinutes: 1
   - name: s3-manager
     url: "https://github.com/bilalcaliskan/s3-manager"
-    checkIntervalMinutes: 30
+    checkIntervalMinutes: 1
+  - name: project1
+    url: "https://github.com/user1/project1"
+    checkIntervalMinutes: 1
+  - name: project2
+    url: "https://github.com/user1/project2"
+    checkIntervalMinutes: 1

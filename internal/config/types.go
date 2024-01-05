@@ -17,8 +17,9 @@ type Config struct {
 
 // Global struct represents the global config
 type Global struct {
-	OneShot bool `yaml:"oneShot"`
-	Verbose bool `yaml:"verbose"`
+	OneShot        bool `yaml:"oneShot"`
+	Verbose        bool `yaml:"verbose"`
+	MaxParallelism int  `yaml:"maxParallelism"`
 }
 
 // Repository struct represents the repository config
