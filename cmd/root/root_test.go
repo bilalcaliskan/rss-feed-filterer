@@ -4,9 +4,9 @@ package root
 
 import (
 	"testing"
-	"time"
 
 	"github.com/bilalcaliskan/rss-feed-filterer/cmd/root/options"
+	"github.com/bilalcaliskan/rss-feed-filterer/internal/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -54,8 +54,7 @@ func TestExecute(t *testing.T) {
 			continue
 		}
 
-		time.Sleep(10 * time.Second)
-
+		utils.SleepSeconds(10)
 		assert.Nil(t, err)
 
 		options.GetRootOptions().SetZeroValues()

@@ -38,5 +38,8 @@ func ReadConfig(cmd *cobra.Command, path string) (conf *Config, err error) {
 		return nil, errors.Wrap(err, "an error occurred while setting credentials with env variables for email service")
 	}
 
+	// set default values for config
+	conf.Global.SetDefaults()
+
 	return conf, nil
 }

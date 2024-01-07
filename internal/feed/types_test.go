@@ -25,17 +25,6 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-// mockParser is a mock type for Parser interface
-//type mockParser struct {
-//	mock.Mock
-//}
-
-// ParseURL mocks ParseURL function
-//func (m *mockParser) ParseURL(url string) (*gofeed.Feed, error) {
-//	args := m.Called(url)
-//	return args.Get(0).(*gofeed.Feed), args.Error(1)
-//}
-
 // mockSlackAPI is a mock type for slack API
 type mockSlackAPI struct {
 	mock.Mock
@@ -415,8 +404,11 @@ func TestReleaseChecker_CheckGithubReleases(t *testing.T) {
 		// override the ParseURL with mock ParseURL
 		parser.On("ParseURL", mock.AnythingOfType("string")).Return(tc.parserResponse, tc.parserErr)
 
+		// create a semaphore channel with 10 slots
+		sem := make(chan struct{}, 10)
+
 		// create a release checker
-		rc := NewReleaseChecker(mockS3, tc.cfg, parser, "thisisdummybucket", logging.GetLogger(), anns)
+		rc := NewReleaseChecker(mockS3, tc.cfg, sem, parser, "thisisdummybucket", logging.GetLogger(), anns)
 
 		// create a context with timeout
 		ctx, cancel := context.WithTimeout(context.Background(), tc.ctxDuration)
