@@ -1,4 +1,5 @@
 LOCAL_BIN := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))/.bin
+DEFAULT_GO_TEST_CMD ?= go test ./... -race -covermode=atomic
 
 GOLANGCI_LINT_VERSION := latest
 REVIVE_VERSION := v1.3.4
@@ -37,7 +38,7 @@ revive-install:
 	GOBIN=$(LOCAL_BIN) go install github.com/mgechev/revive@$(REVIVE_VERSION)
 
 .PHONY: lint
-lint: tools run-lint
+lint: tools lint-golangci-lint run-lint
 
 .PHONY: run-lint
 run-lint: lint-golangci-lint lint-revive
@@ -104,5 +105,5 @@ run: vendor
 	go run main.go start --config-file $(CONFIG_FILE)
 
 .PHONY: generate-mocks
-generate-mocks: mockery-install
+generate-mocks: mockery-install tidy vendor
 	$(LOCAL_BIN)/mockery || (echo mockery returned an error, exiting!; sh -c 'exit 1';)

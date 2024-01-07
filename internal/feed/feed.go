@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"sync"
+	"time"
 
 	"github.com/mmcdole/gofeed"
 
@@ -21,6 +22,9 @@ const (
 
 // Filter function filters the feed and uploads the filtered feed to the bucket if there is a new release
 func Filter(ctx context.Context, cfg *config.Config, client aws.S3ClientAPI, announcers []announce.Announcer) error {
+	// Create a buffered channel to control the number of goroutines
+	sem := make(chan struct{}, cfg.MaxParallelism)
+
 	logger := logging.GetLogger()
 	logger.Info().Int("maxConcurrentJobs", cfg.Global.MaxConcurrentJobs).Msg("starting filtering process...")
 

@@ -5,6 +5,7 @@
 global:
   oneShot: false
   verbose: false
+  maxParallelism: 10
 storage:
   s3:
     provider: aws
