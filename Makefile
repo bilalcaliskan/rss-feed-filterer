@@ -38,7 +38,7 @@ revive-install:
 	GOBIN=$(LOCAL_BIN) go install github.com/mgechev/revive@$(REVIVE_VERSION)
 
 .PHONY: lint
-lint: tools lint-golangci-lint run-lint
+lint: tools run-lint
 
 .PHONY: run-lint
 run-lint: lint-golangci-lint lint-revive
@@ -73,7 +73,7 @@ vendor: tidy
 .PHONY: test
 test: generate-mocks vendor
 	$(info starting the test for whole module...)
-	$(DEFAULT_GO_TEST_CMD) -tags "unit e2e integration" -coverprofile=all_coverage.txt || (echo an error while testing, exiting!; sh -c 'exit 1';)
+	$(DEFAULT_GO_TEST_CMD) -tags "unit e2e integration" -coverprofile=coverage.txt || (echo an error while testing, exiting!; sh -c 'exit 1';)
 
 .PHONY: test-unit
 test-unit: generate-mocks vendor
@@ -92,7 +92,7 @@ test-integration: generate-mocks vendor
 
 .PHONY: test-coverage
 test-coverage: test
-	go tool cover -html=all_coverage.txt -o cover.html
+	go tool cover -html=coverage.txt -o cover.html
 	open cover.html
 
 .PHONY: build
