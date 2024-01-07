@@ -10,7 +10,6 @@ import (
 	"strings"
 	"sync"
 	"testing"
-	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/bilalcaliskan/rss-feed-filterer/cmd/root/options"
@@ -18,6 +17,7 @@ import (
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/config"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/logging"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/storage/aws"
+	"github.com/bilalcaliskan/rss-feed-filterer/internal/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -103,7 +103,8 @@ func TestExecuteStartCmd(t *testing.T) {
 		StartCmd.SetContext(context.WithValue(StartCmd.Context(), options.LoggerKey{}, logger))
 
 		go func() {
-			time.Sleep(10 * time.Second)
+			utils.SleepSeconds(10)
+
 			mu.Lock()
 			cancel()
 			mu.Unlock()

@@ -6,6 +6,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	maxConcurrentJobs = 2
+)
+
 // Config struct represents the config file
 type Config struct {
 	Repositories []Repository `yaml:"repositories"`
@@ -17,9 +21,13 @@ type Config struct {
 
 // Global struct represents the global config
 type Global struct {
-	OneShot        bool `yaml:"oneShot"`
-	Verbose        bool `yaml:"verbose"`
-	MaxParallelism int  `yaml:"maxParallelism"`
+	OneShot           bool `yaml:"oneShot"`
+	Verbose           bool `yaml:"verbose"`
+	MaxConcurrentJobs int  `yaml:"maxConcurrentJobs"`
+}
+
+func (g *Global) SetDefaults() {
+	viper.SetDefault("global.maxConcurrentJobs", maxConcurrentJobs)
 }
 
 // Repository struct represents the repository config

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"sync"
-	"time"
 
 	"github.com/mmcdole/gofeed"
 
@@ -22,39 +21,30 @@ const (
 
 // Filter function filters the feed and uploads the filtered feed to the bucket if there is a new release
 func Filter(ctx context.Context, cfg *config.Config, client aws.S3ClientAPI, announcers []announce.Announcer) error {
-	// Create a buffered channel to control the number of goroutines
-	sem := make(chan struct{}, cfg.MaxParallelism)
-
 	logger := logging.GetLogger()
+	logger.Info().Int("maxConcurrentJobs", cfg.Global.MaxConcurrentJobs).Msg("starting filtering process...")
+
 	if !aws.IsBucketExists(client, cfg.BucketName) {
 		err := fmt.Errorf("bucket %s not found", cfg.BucketName)
 		logger.Error().Err(err).Str("bucketName", cfg.BucketName).Err(err).Msg("an error occurred while checking existence of bucket")
 		return err
 	}
 
+	// Define a semaphore with a capacity of 20.
+	semaphore := make(chan struct{}, 2)
+
 	var wg sync.WaitGroup
 
 	// iterate over repositories and start a goroutine for each repository to check for new releases
 	for _, repo := range cfg.Repositories {
-		sem <- struct{}{} // Will block if there is no empty slot in the buffer
-
+		// Send an empty struct to the semaphore. This operation will block if the semaphore is full.
 		wg.Add(1)
 		go func(repo config.Repository) {
-			defer func() {
-				wg.Done()
-				<-sem // release the slot in the buffered channel
-			}()
+			// Make sure to free up the semaphore once the operation is done.
+			defer func() { <-semaphore }()
+			defer wg.Done()
 
-			logger.Info().
-				Str("repo", repo.Name).
-				Msg("goroutine started, acquiring slot")
-			time.Sleep(10 * time.Second)
-
-			logger.Info().
-				Str("repo", repo.Name).
-				Msg("goroutine finished, releasing slot")
-
-			checker := NewReleaseChecker(client, repo, gofeed.NewParser(), cfg.BucketName, logging.GetLogger(), announcers)
+			checker := NewReleaseChecker(client, repo, semaphore, gofeed.NewParser(), cfg.BucketName, logging.GetLogger(), announcers)
 
 			projectName, err := checker.extractProjectName()
 			if err != nil {
@@ -77,6 +67,7 @@ func Filter(ctx context.Context, cfg *config.Config, client aws.S3ClientAPI, ann
 	//// block until we receive a notification from the doneChan
 	//<-doneChan
 
+	// Wait for all operations to complete.
 	wg.Wait()
 	logger.Info().Msg("all goroutines are finished their works, shutting down...")
 	return nil

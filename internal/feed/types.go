@@ -8,6 +8,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bilalcaliskan/rss-feed-filterer/internal/utils"
+
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/announce"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/config"
 	"github.com/bilalcaliskan/rss-feed-filterer/internal/storage/aws"
@@ -29,16 +31,18 @@ type ReleaseChecker struct {
 	logger zerolog.Logger
 	config.Repository
 	announcers []announce.Announcer
+	sem        chan struct{}
 }
 
 // NewReleaseChecker creates a new ReleaseChecker instance
-func NewReleaseChecker(client aws.S3ClientAPI, repo config.Repository, parser Parser, bucketName string, logger zerolog.Logger, announcers []announce.Announcer) *ReleaseChecker {
+func NewReleaseChecker(client aws.S3ClientAPI, repo config.Repository, sem chan struct{}, parser Parser, bucketName string, logger zerolog.Logger, announcers []announce.Announcer) *ReleaseChecker {
 	return &ReleaseChecker{
 		S3ClientAPI: client,
 		bucketName:  bucketName,
 		Parser:      parser,
 		logger:      logger,
 		Repository:  repo,
+		sem:         sem,
 		announcers:  announcers,
 	}
 }
@@ -88,11 +92,19 @@ func (r *ReleaseChecker) fetchFeed(projectName string) (*gofeed.Feed, error) {
 }
 
 func (r *ReleaseChecker) checkFeed(projectName string, repo config.Repository) {
+	r.logger.Info().Msg("acquiring semaphore slot")
+	r.sem <- struct{}{} // blocks if there is no empty slot
+	defer func() {
+		r.logger.Info().Msg("releasing semaphore slot")
+		<-r.sem
+	}() // unblock the slot when function is finished
+
 	for retries := 0; retries < maxRetries; retries++ {
 		feed, err := r.fetchFeed(projectName)
 		if err != nil {
 			r.logger.Warn().Err(err).Str("url", repo.Url).Msg("an error occurred while fetching feed, retrying...")
-			time.Sleep(time.Second * 5)
+			utils.SleepSeconds(5)
+
 			continue
 		}
 
