@@ -20,3 +20,4 @@ cover.html
 .bin/
 venv
 configs/sample_valid_config.yaml
+deployments/sample_valid_deployment.yaml
